@@ -49,9 +49,7 @@ router.post("/create-order", async (req, res) => {
       },
 
       order_meta: {
-        return_url: `${req.protocol}://${req.get(
-          "host"
-        )}/internship/payment/callback?order_id=${orderId}`,
+        return_url: ` return_url: `${process.env.BASE_URL}/internship/payment/callback?order_id=${orderId}`,
       },
     };
 
