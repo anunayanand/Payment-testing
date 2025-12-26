@@ -98,6 +98,7 @@ router.post("/create-order", async (req, res) => {
 
   customer_details: {
     customer_id: `cust_${Date.now()}`,   // ✅ REQUIRED
+    customer_name: name,  
     customer_email: sanitizedEmail,      // ✅ recommended
     customer_phone: sanitizedPhone       // ✅ recommended
   },
