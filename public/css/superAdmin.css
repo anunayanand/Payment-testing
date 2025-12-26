@@ -1,0 +1,206 @@
+* {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+body {
+  overflow-x: hidden;
+  background-color: #fffaf5;
+}
+.sidebar {
+  width: 250px;
+}
+.sidebar {
+  min-height: 100vh;
+  background: #343a40;
+  color: white;
+  padding-top: 20px;
+}
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+.sidebar a:hover {
+  background: #495057;
+  border-radius: 30px;
+}
+.sidebar i {
+  margin-right: 10px;
+}
+.main-content {
+  margin-left: 250px;
+  padding: 30px;
+}
+/* .card:hover { transform: scale(1.03); transition: 0.3s; } */
+.badge-pending {
+  background-color: #ffc107;
+  color: black;
+}
+.badge-approved {
+  background-color: #28a745;
+}
+.badge-rejected {
+  background-color: #dc3545;
+}
+.table td,
+.table th {
+  vertical-align: middle;
+}
+.section-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+.modal-header {
+  background-color: #343a40;
+  color: white;
+}
+.sidebar a.active {
+  background-color: #ff6600; /* Bootstrap primary */
+  color: #fff;
+  font-weight: bold;
+  border-radius: 30px;
+}
+/* Sent mail rows */
+table tr.row-sent {
+  background-color: #d1fae5 !important; /* light green */
+}
+
+/* Not sent mail rows */
+table tr.row-notSent {
+  background-color: #fee2e2 !important; /* light red */
+}
+
+/* Selected row (always overrides others) */
+table tr.row-selected {
+  background-color: #facc15 !important; /* yellow */
+}
+.admin-tabel td,
+th {
+  background: none !important;
+}
+
+#dashboard .card {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-left: 6px solid #ff6600;
+}
+
+#dashboard .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Stats Cards */
+#dashboard .stat-card h6 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#dashboard .stat-card p {
+  font-size: 2rem;
+}
+
+/* Profile Card */
+#dashboard .profile-card .profile-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#dashboard .profile-card h4 {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+#dashboard .profile-card .badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+
+
+
+
+#viewAdmin::-webkit-scrollbar {
+  width: 0px;
+  visibility: hidden;
+}
+
+#viewAdmin .card {
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border-left: 6px solid #ff6600;
+}
+
+#viewAdmin .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Stats Cards */
+#viewAdmin .stat-card h6 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+#viewAdmin .stat-card p {
+  font-size: 2rem;
+}
+
+/* Profile Card */
+#viewAdmin .profile-card .profile-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#viewAdmin .profile-card h4 {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+#viewAdmin .profile-card .badge {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+
+/* Fixed height for profile */
+.fixed-profile {
+  height: 20rem !important; /* or any fixed height you want */
+}
+
+/* Scrollable right card */
+.scrollable-notice {
+  max-height: 460px; /* same as left card for symmetry */
+  overflow-y: auto;  /* vertical scroll if content exceeds height */
+}
+
+/* Optional: nice scrollbar for right card */
+.scrollable-notice::-webkit-scrollbar {
+  width: 0px;
+  visibility: hidden;
+}
+
+.scrollable-notice::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  display: none;
+}

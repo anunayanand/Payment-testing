@@ -1,0 +1,39 @@
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <% if (success && success.length > 0) { %>
+    <% success.forEach(msg => { %>
+      <div class="toast text-bg-success show" role="alert">
+        <div class="d-flex">
+          <div class="toast-body"><%= msg %></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+            data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <% if (error && error.length > 0) { %>
+    <% error.forEach(msg => { %>
+      <div class="toast text-bg-danger show" role="alert">
+        <div class="d-flex">
+          <div class="toast-body"><%= msg %></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+            data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <% if (info && info.length > 0) { %>
+    <% info.forEach(msg => { %>
+      <div class="toast align-items-center text-bg-success border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+        <div class="d-flex">
+          <div class="toast-body"><%= msg %></div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+
+<script src="/js/toaster.js"></script>

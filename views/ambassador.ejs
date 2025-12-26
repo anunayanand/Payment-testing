@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ambassador Dashboard</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicons -->
+    <link href="/img/Rixi Lab New Logo PNG.png" rel="icon" />
+    <link href="/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Fonts -->
+
+    <!-- Vendor CSS Files -->
+    <link href="/js//vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="/js//vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="/js//vendor/aos/aos.css" rel="stylesheet" />
+    <link href="/js//vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="/js//vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+
+    <!-- Main CSS File -->
+    <link href="/css/main.css" rel="stylesheet" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- <link href="intern.css" rel="stylesheet"> -->
+
+    <style>
+      * {
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+      body {
+        background-color: #121212;
+        color: #fff;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .card-custom,
+      .doc-card {
+        background-color: #121212;
+        border-radius: 1rem;
+        border: none;
+        color: #fff;
+      }
+      .card-custom h1 {
+        color: #ff6600;
+      }
+      .sidebar {
+        background-color: #1e1e1e;
+        border-radius: 1rem;
+        padding: 1rem 1rem;
+        height: 93vh;
+        overflow-y: auto;
+      }
+      section {
+        background-color: #1e1e1e;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        display: none;
+      }
+      .sidebar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      main {
+        height: 93vh;
+        overflow-y: auto;
+        padding: 2rem;
+        background-color: #1e1e1e;
+        border-radius: 1rem;
+        padding: 2rem;
+      }
+      .onMobile {
+        display: none;
+      }
+      .bigCentre {
+        text-align: center;
+        flex : 1;
+      }
+
+      main::-webkit-scrollbar {
+        display: none;
+      }
+      main {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .nav-pills .nav-link.active {
+        background-color: #ff6600;
+        color: #fff;
+      }
+
+      .nav-pills .nav-link {
+        color: #fff;
+      }
+
+      main section {
+        display: none;
+      }
+      main section.active {
+        display: block;
+      }
+      #showDetails {
+        display: none;
+        background: none;
+        border: none;
+        color: #ff6600;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      progress::-webkit-progress-bar {
+        background-color: #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      progress::-webkit-progress-value {
+        background-color: #ff6600;
+        border-radius: 10px;
+      }
+
+      /* For Firefox */
+      progress::-moz-progress-bar {
+        background-color: #ff6600;
+        border-radius: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          height: auto;
+          margin-top: 0px !important;
+        }
+        main {
+          padding: 1rem;
+        }
+        .nav-pills {
+          justify-content: start !important;
+          flex-wrap: wrap;
+          font-size: smaller;
+          gap: 1rem !important;
+        }
+        .details {
+          display: none;
+        }
+        .card-custom h1 {
+          color: #ff6600;
+          font-weight: 700;
+        }
+        #showDetails {
+          display: block;
+        }
+        .showOnPhone {
+          display: none;
+        }
+        .card-custom {
+          flex-direction: column !important;
+          align-items: start !important;
+        }
+        .onMobile {
+          display: inline-block;
+        }
+        .onBigScreen {
+          display: none;
+        }
+        .phone {
+          margin-top: 8px;
+        }
+        .doc-card {
+          background-color: #121212;
+          border-radius: 1rem;
+          border: none;
+          color: #fff;
+        }
+        .bigCentre {
+        text-align: unset;
+        flex : unset;
+        margin-left: 5px;
+        }
+      }
+      @media (max-width: 460px) {
+        .nav-pills {
+          justify-content: start !important;
+          flex-wrap: nowrap;
+          font-size: 0.6rem !important;
+          gap: 0.1rem !important;
+        }
+        #showDetails {
+          display: block;
+        }
+        .showOnPhone {
+          display: none;
+        }
+        .onBigScreen {
+          display: none;
+        }
+        .phone {
+          margin-top: 8px;
+        }
+        .card-custom {
+          flex-direction: column !important;
+          align-items: start !important;
+        }
+        .doc-card {
+          background-color: #121212;
+          border-radius: 1rem;
+          border: none;
+          color: #fff;
+        }
+        .bigCentre {
+        text-align: unset;
+        flex : unset;
+        margin-left: 5px;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="index-page">
+     <%- include('partials/loader') %>
+    <header id="header" class="header d-flex align-items-center fixed-top">
+      <div
+        class="container position-relative d-flex align-items-center justify-content-between"
+      >
+        <a
+          style="text-decoration: none"
+          href="/"
+          class="logo d-flex align-items-center me-auto me-xl-0"
+        >
+          <img src="/img/Rixi Lab New Logo PNG.png" alt="" />
+          <h1 class="sitename">Rixi Lab</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li>
+              <a style="text-decoration: none" href="/" class="active">Home</a>
+            </li>
+            <li><a style="text-decoration: none" href="/#about">About</a></li>
+            <li>
+              <a style="text-decoration: none" href="/#services">Services</a>
+            </li>
+            <li>
+              <a style="text-decoration: none" href="/#contact">Contact</a>
+            </li>
+          </ul>
+          <!-- <i class="mobile-nav-toggle d-xl-none bi bi-list"></i> -->
+        </nav>
+
+        <a class="btn-getstarted" style="text-decoration: none" href="/logout"
+          >Logout</a
+        >
+      </div>
+    </header>
+
+    <div
+      class="row g-4 justify-content-center m-2"
+      style="margin-top: 4rem !important"
+    >
+      <!-- Sidebar -->
+      <nav
+        class="col-md-3 d-md-block collapse show sidebar"
+        id="sidebarMenu"
+        style="border: 1px solid #ff6600"
+      >
+        <div class="text-center mb-4">
+          <!-- Circular Profile Image -->
+          <div
+            class="rounded-circle overflow-hidden mx-auto mb-2"
+            style="width: 120px; height: 120px; cursor: pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#updateProfileModal"
+          >
+            <img
+              src="<%= ambassador.img_url %>"
+              alt="Profile"
+              class="img-fluid"
+              style="width: 100%; height: 100%; object-fit: cover"
+            />
+          </div>
+
+          <!-- Name & Intern ID -->
+          <h3 class="fw-bold">
+            <%= ambassador.name %>
+            <i
+              class="bi bi-patch-check"
+              style="color: #ff6600; font-size: 1.5rem"
+            ></i>
+          </h3>
+          <h5><%= ambassador.designation %></h5>
+          <h5 style="color: #ff6600"><%= ambassador.ambassador_id %></h5>
+        </div>
+
+        <!-- Update Profile Image Modal -->
+        <div
+          class="modal fade"
+          id="updateProfileModal"
+          tabindex="-1"
+          aria-labelledby="updateProfileLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div
+              class="modal-content"
+              style="background-color: #1e1e1e; border: 1px solid #ff6600"
+            >
+              <div class="modal-header">
+                <h5 class="modal-title text-white" id="updateProfileLabel">
+                  Update Profile Picture
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body text-center">
+                <!-- Image Preview -->
+                <div class="mb-3">
+                  <img
+                    id="previewImage"
+                    src="<%= ambassador.img_url %>"
+                    style="
+                      width: 120px;
+                      height: 120px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    "
+                    alt="Preview"
+                  />
+                </div>
+
+                <!-- Upload Form -->
+                <form
+                  action="/ambassador/update-image"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  id="updateImageForm"
+                >
+                  <input
+                    type="file"
+                    name="image"
+                    id="imageInput"
+                    class="form-control mb-3"
+                    accept="image/*"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    class="btn w-100 text-white"
+                    style="background-color: #ff6600"
+                  >
+                    Update Picture
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <div style="display: flex; justify-content: space-between">
+          <h3 class="bigCentre">Personal Details</h3>
+          <button id="showDetails">
+            <i class="bi bi-arrow-down-square-fill"></i>
+          </button>
+        </div>
+        <hr class="onBigScreen" />
+        <div class="text-start small row row-cols-1 g-2 details">
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-envelope-at-fill" style="color: #ff6600"></i
+                >&nbsp; Email: <%= ambassador.email %></strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong>
+                <i class="bi bi-telephone-fill" style="color: #ff6600"></i
+                >&nbsp; Mobile No: +91 <%= ambassador.phone %></strong
+              >
+            </div>
+          </div>
+          <!-- <div class="col">
+              <div class="card card-custom p-2 px-3">
+                  <strong><i class="bi bi-clock-fill" style="color: #ff6600"></i>&nbsp; Gender: Male</strong>
+                </div>
+            </div> -->
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-briefcase-fill" style="color: #ff6600"></i
+                >&nbsp; Referal Code: <%= ambassador.referralId %></strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-bookmark-check-fill" style="color: #ff6600"></i
+                >&nbsp; Joining Date: <% const d = new
+                Date(ambassador.joining_date); const formattedDate =
+                d.toLocaleString("en-US", { month: "short", day: "2-digit",
+                year: "numeric" }) .replace(/,/g, ""); %> <%= formattedDate %>
+              </strong>
+            </div>
+          </div>
+          <div class="col d-flex align-items-center justify-content-center">
+            <a
+              href="<%= ambassador.insta_profile_url %>"
+              target="_blank"
+              style="text-decoration: none; color: inherit"
+            >
+              <div class="card card-custom p-2 px-3 mx-2">
+                <strong class="text-center"
+                  ><i class="bi bi-instagram" style="color: #ff6600"></i>&nbsp;
+                  Instagram
+                </strong>
+              </div>
+            </a>
+            <a
+              href="<%= ambassador.linkedin_profile_url %>"
+              target="_blank"
+              style="text-decoration: none; color: inherit"
+            >
+              <div class="card card-custom p-2 px-3">
+                <strong class="text-center"
+                  ><i class="bi bi-linkedin" style="color: #ff6600"></i>&nbsp;
+                  Linkedin
+                </strong>
+              </div>
+            </a>
+          </div>
+          <div class="col showOnPhone" style="visibility: hidden">
+            <div class="card card-custom p-2 px-3">
+              <strong class="text-center"
+                ><i class="bi bi-linkedin" style="color: #ff6600"></i>&nbsp;
+                Linkedin
+              </strong>
+            </div>
+          </div>
+          <div class="col showOnPhone" style="visibility: hidden">
+            <div class="card card-custom p-2 px-3">
+              <strong class="text-center"
+                ><i class="bi bi-linkedin" style="color: #ff6600"></i>&nbsp;
+                Linkedin
+              </strong>
+            </div>
+          </div>
+
+          <div class="col mt-3">
+            <div class="px-3 text-center" style="line-height: 1.5rem">
+              <span
+                >For Technical Support:
+                <strong style="color: #ff6600"
+                  >support@rixilab.tech</strong
+                ></span
+              ><br />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main
+        class="col-md-8 m-4 p-3"
+        style="border: 1px solid #ff6600; background-color: #1e1e1e"
+      >
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills flex-nowrap mb-1 gap-2 justify-content-end">
+          <li class="nav-item">
+            <a class="nav-link active" href="#dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#interns">Interns</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#rewards">Rewards</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#documents">Documents</a>
+          </li>
+          <!-- <li class="nav-item"><a class="nav-link" href="#setting">Setting</a></li> -->
+        </ul>
+
+        <!-- Sections -->
+        <section id="dashboard" class="active p-1">
+          <h2 class="fw-bold mt-2">
+            Welcome, <%= ambassador.name.trim().split(" ")[0] %>
+          </h2>
+          <div class="row row-cols-1 row-cols-md-3 g-3 mt-2">
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Students Referred</h5>
+                <h1><i class="bi bi-people"></i> <%= ambassador.internCount %></h1>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Total Earnings</h5>
+                <h1>&#8377;<%= earnings %></h1>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Badge</h5>
+                <% if (badge === "Gold") { %>
+                <h1 style="color: goldenrod">
+                  <i class="bi bi-award-fill"></i> <%= badge %>
+                </h1>
+                <% } else if (badge === "Silver") { %>
+                <h1 style="color: #c0c0c0">
+                  <i class="bi bi-award-fill"></i> <%= badge %>
+                </h1>
+                <% } else if (badge === "Bronze") { %>
+                <h1 style="color: #cd7f32">
+                  <i class="bi bi-award-fill"></i> <%= badge %>
+                </h1>
+                <% } else { %>
+                <h1 style="color: white">
+                  <i class="bi bi-award-fill"></i> <%= badge %>
+                </h1>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <h3>College Details</h3>
+          <hr />
+          <h5>College : <%= ambassador.college %></h5>
+          <h5>University :<%= ambassador.university %></h5>
+          <hr />
+          <h3>Basic Details</h3>
+          <hr />
+          <h5>Name : <%= ambassador.name %></h5>
+          <h5>Gender : <%= ambassador.gender %></h5>
+          <h5>
+            Adreess : <%= ambassador.address.street %>, <%=
+            ambassador.address.city %>, <%= ambassador.address.state %> <%=
+            ambassador.address.country %> - <%= ambassador.address.pincode %>
+          </h5>
+          <hr />
+          <div
+            class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600; background-color: #1e1e1e"
+          >
+            <div class="d-flex align-items-center gap-3">
+              <div class="info-icon text-warning">
+                <i
+                  class="bi bi-file-earmark-medical-fill fs-3"
+                  style="color: #ff6600"
+                ></i>
+              </div>
+              <div class="info-content">
+                <h5 class="fw-bold mb-1 text-white">
+                  Winter Internship Registration Form - Referal Code: <%=
+                  ambassador.referralId %>
+                </h5>
+              </div>
+            </div>
+            <a
+              href="javascript:void(0)"
+              onclick="shareReferral('<%= ambassador.referralId %>')"
+              class="btn btn-outline-success"
+            >
+              <span>Share &nbsp;</span>
+              <i class="bi bi-share-fill"></i>
+            </a>
+          </div>
+        </section>
+
+        <section id="interns" class="p-1">
+          <h2 class="fw-bold">Total Interns</h2>
+          <p class="text-secondary">Interns referd</p>
+
+          <% if (referredInterns && referredInterns.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Domain</th>
+                  <th scope="col">Batch</th>
+                  <th scope="col">Joining Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% referredInterns.forEach((intern, index) => { %>
+                <tr>
+                  <td><%= index + 1 %></td>
+                  <td><%= intern.name %></td>
+                  <td><%= intern.email %></td>
+                  <td><%= intern.domain %></td>
+                  <td><%= intern.batch_no %></td>
+                  <td>
+                    <%= new Date(intern.joining_date).toLocaleString("en-US", {
+                    month: "short", day: "2-digit", year: "numeric"
+                    }).replace(/,/g, "") %>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } else { %>
+          <p class="text-secondary mb-0">No interns have been referred yet.</p>
+          <% } %>
+        </section>
+
+        <section id="rewards" class="p-1">
+          <h2 class="fw-bold">Rewards</h2>
+          <p class="text-secondary">
+            Fill this form once after reaching the Bronze level. As your level
+            increases, the amount will be credited directly to your account — no
+            need to submit it again.
+          </p>
+          <div class="row g-3">
+            <% if (badge === "Bronze" || badge === "None") { %>
+            <!-- 🟠 Bronze / None -->
+            <div class="col-12 mb-3">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i class="bi bi-wallet2 fs-3" style="color: #ff6600"></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      Request for Withdrawal
+                    </h5>
+                    <% if (badge === "None") { %>
+                    <p class="mb-0 text-white">
+                      Fill this form once after reaching the
+                      <b>Bronze</b> level.
+                    </p>
+                    <% } else if (badge === "Bronze") { %>
+                    <p class="mb-0 text-white">
+                      Congratulations! You’re now at <b>Bronze</b>. Fill this
+                      form.
+                    </p>
+                    <% } %>
+                  </div>
+                </div>
+                <% if (badge === "Bronze") { %>
+                <a
+                  href="https://forms.gle/bTro6nspxr1ZmWrF8"
+                  target="_blank"
+                  class="btn btn-outline"
+                  style="color: #ff6600; border: 1px solid #ff6600 ;cursor: pointer;"
+                >
+                  <i class="bi bi-arrow-up-right"></i>
+                </a>
+                <% } else { %>
+                <a
+                  href="#"
+                  class="btn btn-outline-secondary disabled"
+                  tabindex="-1"
+                  aria-disabled="true"
+                >
+                  <i class="bi bi-arrow-up-right"></i>
+                </a>
+                <% } %>
+              </div>
+            </div>
+            <% } else if (badge === "Silver") { %>
+            <!-- ⚪ Silver -->
+            <div class="col-12 mb-3">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #c0c0c0; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i class="bi bi-star-fill fs-3" style="color: #c0c0c0"></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      Silver Level Rewards
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Congratulations! You’re now at <b>Silver</b> level. Fill
+                      this form
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="#"
+                  target="_blank"
+                  class="btn btn-outline"
+                  style="color: silver; border: 1px solid silver"
+                >
+                  <i class="bi bi-arrow-up-right"></i>
+                </a>
+              </div>
+            </div>
+            <% } else if (badge === "Gold") { %>
+            <!-- 🟡 Gold -->
+            <div class="col-12 mb-3">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid goldenrod; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-trophy-fill fs-3"
+                      style="color: goldenrod"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">Gold Level Achieved</h5>
+                    <p class="mb-0 text-white">
+                      Amazing work! You’ve reached <b>Gold</b> level. Fill this
+                      form
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="#"
+                  target="_blank"
+                  class="btn btn-outline"
+                  style="color: goldenrod; border: 1px solid goldenrod"
+                >
+                  <i class="bi bi-arrow-up-right"></i>
+                </a>
+              </div>
+            </div>
+            <% } %> <% if (bronzeMail) { %>
+            <!-- 🥉 Bronze Mail -->
+            <div class="col-12">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #cd7f32; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-success">
+                    <i class="bi bi-cash-coin fs-3" style="color: #cd7f32"></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      ₹200 Credited (Bronze)
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Amount successfully added to your account.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <h3 style="color: #cd7f32; margin: 0">
+                    <i class="bi bi-award-fill"></i>
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <% } %> <% if (silverMail) { %>
+            <!-- 🥈 Silver Mail -->
+            <div class="col-12 mt-3">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #c0c0c0; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-secondary">
+                    <i class="bi bi-cash-coin fs-3" style="color: #c0c0c0"></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      ₹300 Credited (Silver)
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Amount successfully added to your account.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <h3 style="color: silver; margin: 0">
+                    <i class="bi bi-award-fill"></i>
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <% } %> <% if (goldMail) { %>
+            <!-- 🥇 Gold Mail -->
+            <div class="col-12 mb-3">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid goldenrod; background-color: #1e1e1e"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-cash-coin fs-3"
+                      style="color: goldenrod"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      ₹500 Credited (Gold)
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Amount successfully added to your account.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <h3 style="color: goldenrod; margin: 0">
+                    <i class="bi bi-award-fill"></i>
+                  </h3>
+                </div>
+              </div>
+            </div>
+
+            <% } %>
+          </div>
+        </section>
+
+        <section id="documents" class="p-1">
+          <h2 class="fw-bold mt-2">Internship Documents</h2>
+          <p class="text-white">
+            Your can download your internship documents here...
+          </p>
+          <div class="row g-3">
+            <!-- Offer Letter -->
+            <div class="col-12">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-file-earmark-text-fill fs-3"
+                      style="color: #ff6600"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">Offer Letter</h5>
+                    <p class="mb-0 text-white">
+                      Download your offer letter from here
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="<%= ambassador.offer_letter_link %>"
+                  target="_blank"
+                  class="btn btn-outline-success"
+                >
+                  <i class="bi bi-download"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Certificate -->
+            <div class="col-12">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-file-earmark-medical-fill fs-3"
+                      style="color: #ff6600"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      Ambassador Certificate
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Download your <% if (badge === "Gold") { %> Gold <% } else
+                      if (badge === "Silver") { %> Silver <% } else if (badge
+                      === "Bronze") { %> Bronze <% } else { %> <% } %> Campus
+                      Ambassador Certificate
+                    </p>
+                  </div>
+                </div>
+                <% if (badge === "None") { %>
+                <a
+                  href="#"
+                  class="btn btn-outline-secondary disabled"
+                  tabindex="-1"
+                  aria-disabled="true"
+                >
+                  <i class="bi bi-download"></i>
+                </a>
+                <% } else { %>
+                <a
+                  href="<%= ambassador.certificate_link %>"
+                  target="_blank"
+                  class="btn btn-outline-success"
+                >
+                  <i class="bi bi-download"></i>
+                </a>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Password Change Modal -->
+    <% if (showPasswordPopup) { %>
+    <div
+      class="modal fade"
+      id="passwordModal"
+      tabindex="-1"
+      aria-labelledby="passwordModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content shadow-lg"
+          style="background-color: #1e1e1e; border: 1px solid #ff6600"
+        >
+          <div class="modal-header">
+            <h5 class="modal-title text-white" id="passwordModalLabel">
+              Change Your Password
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form
+              action="/ambassador/change-password"
+              method="POST"
+              id="passwordForm"
+              novalidate
+            >
+              <div class="mb-3">
+                <label class="form-label text-white">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  class="form-control"
+                  placeholder="Enter new Password"
+                  minlength="6"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-white">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirm Password"
+                  required
+                  minlength="6"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100 text-white"
+                style="background-color: #ff6600; font-weight: 500"
+              >
+                Update Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const passwordModalEl = document.getElementById("passwordModal");
+      const passwordModal = new bootstrap.Modal(passwordModalEl, {
+        backdrop: "static",
+        keyboard: false,
+      });
+      passwordModal.show();
+    </script>
+    <% } %>
+
+    <footer id="footer" class="footer light-background">
+      <div class="copyright text-center">
+        <div
+          class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center"
+        >
+          <div
+            class="d-flex flex-column align-items-center align-items-lg-start"
+          >
+            <div>
+              © Copyright 2025 <strong><span>Rixi Lab</span></strong
+              >. All Rights Reserved
+            </div>
+            <div class="credits">
+              Designed by
+              <a
+                style="text-decoration: none; color: #ff6600"
+                href="https://www.rixilab.tech"
+                ><b>Rixi Lab</b></a
+              >
+            </div>
+          </div>
+
+          <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+            <a href="https://www.linkedin.com/company/rixilab"
+              ><i class="bi bi-linkedin"></i
+            ></a>
+            <a href="https://www.facebook.com/rixilab"
+              ><i class="bi bi-facebook"></i
+            ></a>
+            <a href="https://www.instagram.com/rixilab.in"
+              ><i class="bi bi-instagram"></i
+            ></a>
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <%- include("partials/toaster") %>
+
+    <!-- Scroll Top -->
+    <a
+      href="#"
+      id="scroll-top"
+      class="scroll-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const sections = document.querySelectorAll("main section");
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            navLinks.forEach((l) => l.classList.remove("active"));
+            this.classList.add("active");
+            sections.forEach((s) => s.classList.remove("active"));
+            const target = this.getAttribute("href").substring(1);
+            document.getElementById(target).classList.add("active");
+          });
+        });
+      });
+
+      let showDetailsBtn = document.getElementById("showDetails");
+      let detailsSection = document.querySelector(".details");
+      let detailsVisible = false;
+      showDetailsBtn.addEventListener("click", function () {
+        detailsVisible = !detailsVisible;
+        if (detailsVisible) {
+          detailsSection.style.display = "block";
+          showDetailsBtn.innerHTML =
+            '<i class="bi bi-arrow-up-square-fill"></i>';
+        } else {
+          detailsSection.style.display = "none";
+          showDetailsBtn.innerHTML =
+            '<i class="bi bi-arrow-down-square-fill"></i>';
+        }
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        const header = document.getElementById("header");
+        let lastScroll = 0;
+
+        ScrollTrigger.create({
+          start: 0,
+          end: "max",
+          onUpdate: (self) => {
+            const currentScroll = self.scroll();
+
+            if (currentScroll > lastScroll && currentScroll > 50) {
+              // Scrolling down -> hide header
+              gsap.to(header, {
+                y: "-100%",
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            } else {
+              // Scrolling up -> show header
+              gsap.to(header, { y: "0%", duration: 0.3, ease: "power2.out" });
+            }
+
+            lastScroll = currentScroll;
+          },
+        });
+      });
+
+      // Image Preview
+      const imageInput = document.getElementById("imageInput");
+      const previewImage = document.getElementById("previewImage");
+
+      imageInput.addEventListener("change", function () {
+        const file = this.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            previewImage.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      function shareReferral(referralId) {
+  const referralLink = `https://rixilab.tech/internship?referral_code=${referralId}`;
+  const shareText = `🚀 Join the RixiLab Internship using my referral link:\n${referralLink}`;
+
+  // Only use navigator.share on HTTPS or localhost
+  const isSecure =
+    window.location.protocol === "https:" ||
+    window.location.hostname === "localhost";
+
+  if (isSecure && navigator.share) {
+    navigator.share({
+      title: "RixiLab Internship",
+      text: shareText,
+      url: referralLink,
+    }).catch((err) => console.error("Share failed:", err));
+  } else {
+    // Fallback for copy to clipboard
+    const copyTextToClipboard = async (text) => {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Referral link copied to clipboard! 📋");
+      } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          alert("Referral link copied to clipboard! 📋");
+        } catch (err2) {
+          console.error("Fallback copy failed:", err2);
+          alert("Unable to copy referral link. Please copy manually.");
+        }
+        document.body.removeChild(textarea);
+      }
+    };
+
+    copyTextToClipboard(shareText);
+  }
+}
+
+
+    </script>
+
+    <!-- Vendor JS Files -->
+    <script src="/js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendor/aos/aos.js"></script>
+    <script src="/js/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="/js/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="/js/vendor/typed.js/typed.umd.js"></script>
+    <script src="/js/vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="/js/main.js"></script>
+    <script type="module" src="/js/login.js"></script>
+    <script src="/js/intern.js"></script>
+  </body>
+</html>

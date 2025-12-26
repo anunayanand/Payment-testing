@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Intern Dashboard</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Favicons -->
+    <link href="/img/Rixi Lab New Logo PNG.png" rel="icon" />
+    <link href="/img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Fonts -->
+
+    <!-- Vendor CSS Files -->
+    <link href="/js//vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="/js//vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="/js//vendor/aos/aos.css" rel="stylesheet" />
+    <link href="/js//vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
+    <link href="/js//vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+
+    <!-- Main CSS File -->
+    <link href="/css/main.css" rel="stylesheet" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- <link href="intern.css" rel="stylesheet"> -->
+
+    <style>
+      * {
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+      body {
+        background-color: #121212;
+        color: #fff;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .card-custom,
+      .doc-card {
+        background-color: #121212;
+        border-radius: 1rem;
+        border: none;
+        color: #fff;
+      }
+      .card-custom h1 {
+        color: #ff6600;
+      }
+      .sidebar {
+        background-color: #1e1e1e;
+        border-radius: 1rem;
+        padding: 1rem 1rem;
+        height: 93vh;
+        overflow-y: auto;
+      }
+      section {
+        background-color: #1e1e1e;
+      }
+
+      .sidebar::-webkit-scrollbar {
+        display: none;
+      }
+      .sidebar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      main {
+        height: 93vh;
+        overflow-y: auto;
+        padding: 2rem;
+        background-color: #1e1e1e;
+        border-radius: 1rem;
+        padding: 2rem;
+      }
+      .onMobile {
+        display: none;
+      }
+
+      main::-webkit-scrollbar {
+        display: none;
+      }
+      main {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .nav-pills .nav-link.active {
+        background-color: #ff6600;
+        color: #fff;
+      }
+
+      .nav-pills .nav-link {
+        color: #fff;
+      }
+
+      main section {
+        display: none;
+      }
+      main section.active {
+        display: block;
+      }
+      #showDetails {
+        display: none;
+        background: none;
+        border: none;
+        color: #ff6600;
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      progress::-webkit-progress-bar {
+        background-color: #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      progress::-webkit-progress-value {
+        background-color: #ff6600;
+        border-radius: 10px;
+      }
+
+      /* For Firefox */
+      progress::-moz-progress-bar {
+        background-color: #ff6600;
+        border-radius: 10px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          height: auto;
+          margin-top: 0px !important;
+        }
+        main {
+          padding: 1rem;
+        }
+        .nav-pills {
+          justify-content: start !important;
+          flex-wrap: wrap;
+          font-size: smaller;
+          gap: 1rem !important;
+        }
+        .details {
+          display: none;
+        }
+        .card-custom h1 {
+          color: #ff6600;
+          font-weight: 700;
+        }
+        #showDetails {
+          display: block;
+        }
+        .showOnPhone {
+          display: none;
+        }
+        .card-custom {
+          flex-direction: column !important;
+          align-items: start !important;
+        }
+        .onMobile {
+          display: inline-block;
+        }
+        .onBigScreen {
+          display: none;
+        }
+        .phone {
+          margin-top: 8px;
+        }
+        .doc-card {
+          background-color: #121212;
+          border-radius: 1rem;
+          border: none;
+          color: #fff;
+        }
+      }
+      @media (max-width: 460px) {
+        .nav-pills {
+          justify-content: start !important;
+          flex-wrap: nowrap;
+          font-size: 0.6rem !important;
+          gap: 0.1rem !important;
+        }
+        #showDetails {
+          display: block;
+        }
+        .showOnPhone {
+          display: none;
+        }
+        .onBigScreen {
+          display: none;
+        }
+        .phone {
+          margin-top: 8px;
+        }
+        .card-custom {
+          flex-direction: column !important;
+          align-items: start !important;
+        }
+        .doc-card {
+          background-color: #121212;
+          border-radius: 1rem;
+          border: none;
+          color: #fff;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="index-page">
+     <%- include('partials/loader') %>
+    <header id="header" class="header d-flex align-items-center fixed-top">
+      <div
+        class="container position-relative d-flex align-items-center justify-content-between"
+      >
+        <a
+          style="text-decoration: none"
+          href="/"
+          class="logo d-flex align-items-center me-auto me-xl-0"
+        >
+          <img src="/img/Rixi Lab New Logo PNG.png" alt="" />
+          <h1 class="sitename">Rixi Lab</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li>
+              <a style="text-decoration: none" href="/" class="active">Home</a>
+            </li>
+            <li><a style="text-decoration: none" href="/#about">About</a></li>
+            <li>
+              <a style="text-decoration: none" href="/#services">Services</a>
+            </li>
+            <li>
+              <a style="text-decoration: none" href="/#contact">Contact</a>
+            </li>
+          </ul>
+          <!-- <i class="mobile-nav-toggle d-xl-none bi bi-list"></i> -->
+        </nav>
+
+        <a class="btn-getstarted" style="text-decoration: none" href="/logout"
+          >Logout</a
+        >
+      </div>
+    </header>
+
+    <div
+      class="row g-4 justify-content-center m-2"
+      style="margin-top: 4rem !important"
+    >
+      <!-- Sidebar -->
+      <nav
+        class="col-md-3 d-md-block collapse show sidebar position-relative"
+        id="sidebarMenu"
+        style="border: 1px solid #ff6600"
+      >
+   <div 
+  class="dropdown position-absolute" 
+  style="top: 10px; right: 10px; z-index: 2000;"
+>
+  <button 
+    class="btn  position-relative rounded-circle"
+    id="notificationButton"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+    style="color: #ff6600; background-color: #1e1e1e; border: none !important;"
+    >
+
+    <i class="bi bi-bell fs-4"></i>
+
+    <% const unreadCount = notifications ? notifications.length : 0; %>
+    <% if (unreadCount > 0) { %>
+      <span 
+        id="notificationDot"
+        class="position-absolute top-5 start-90 translate-middle p-1 rounded-circle" style="background-color: #ff6600;">
+        <span class="visually-hidden">New alerts</span>
+      </span>
+    <% } %>
+  </button>
+
+  <ul 
+    class="dropdown-menu dropdown-menu-end shadow p-2"
+    style="width: 320px; max-height: 400px; overflow-y: auto;"
+    id="notificationList">
+
+    <li class="dropdown-header fw-bold d-flex justify-content-between align-items-center" style="padding-left: 0.25rem; padding-right: 0.25rem;">
+      <span>Notifications</span>
+      <% if (notifications && notifications.length > 0) { %>
+        <button type="button" id="markAllBtn" class="btn btn-sm btn-danger">Mark All</button>
+      <% } %>
+    </li>
+    <hr class="my-1">
+
+    <% if (notifications && notifications.length > 0) { %>
+      <% notifications.forEach(n => { %>
+        <li class="p-2 border-bottom d-flex justify-content-between align-items-start" data-id="<%= n._id %>">
+          <div style="white-space: normal;">
+            <small><strong><%= n.title %></strong></small><br>
+            <small><%= n.message %></small><br>
+            <!-- <small class="text-muted"><%= n.createdAt ? new Date(n.createdAt).toLocaleString() : 'Date not available' %></small> -->
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-success mark-as-read">✔</button>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li class="p-3 text-center text-muted">No new notifications</li>
+    <% } %>
+  </ul>
+</div>
+
+
+        <div class="text-center mb-4">
+          
+          <!-- Circular Profile Image -->
+          <div
+            class="rounded-circle overflow-hidden mx-auto mb-2"
+            style="width: 120px; height: 120px; cursor: pointer"
+            data-bs-toggle="modal"
+            data-bs-target="#updateProfileModal"
+          > 
+            <img
+              src="<%= intern.img_url %>"
+              alt="Profile"
+              class="img-fluid"
+              style="width: 100%; height: 100%; object-fit: cover"
+            />
+          </div>
+
+          <!-- Name & Intern ID -->
+          <h3 class="fw-bold"><%= intern.name %></h3>
+          <h5 style="color: #ff6600"><%= intern.intern_id %></h5>
+        </div>
+
+        <!-- Update Profile Image Modal -->
+        <div
+          class="modal fade"
+          id="updateProfileModal"
+          tabindex="-1"
+          aria-labelledby="updateProfileLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div
+              class="modal-content"
+              style="background-color: #1e1e1e; border: 1px solid #ff6600"
+            >
+              <div class="modal-header">
+                <h5 class="modal-title text-white" id="updateProfileLabel">
+                  Update Profile Picture
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body text-center">
+                <!-- Image Preview -->
+                <div class="mb-3">
+                  <img
+                    id="previewImage"
+                    src="<%= intern.img_url %>"
+                    style="
+                      width: 120px;
+                      height: 120px;
+                      border-radius: 50%;
+                      object-fit: cover;
+                    "
+                    alt="Preview"
+                  />
+                </div>
+
+                <!-- Upload Form -->
+                <form
+                  action="/update-image"
+                  method="POST"
+                  enctype="multipart/form-data"
+                  id="updateImageForm"
+                >
+                  <input
+                    type="file"
+                    name="image"
+                    id="imageInput"
+                    class="form-control mb-3"
+                    accept="image/*"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    class="btn w-100 text-white"
+                    style="background-color: #ff6600"
+                  >
+                    Update Picture
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <div style="display: flex; justify-content: space-between">
+          <h3 class="mb-3">Personal Details</h3>
+          <button id="showDetails">
+            <i class="bi bi-arrow-down-square-fill"></i>
+          </button>
+        </div>
+        <!-- <hr class="onBigScreen mt-0"> -->
+        <div class="text-start small row row-cols-1 g-2 details">
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-envelope-at-fill" style="color: #ff6600"></i
+                >&nbsp; Email: <%= intern.email %></strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong>
+                <i class="bi bi-telephone-fill" style="color: #ff6600"></i
+                >&nbsp; Mobile No: +91 <%= intern.phone%></strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-briefcase-fill" style="color: #ff6600"></i
+                >&nbsp; Domain: <%= intern.domain %></strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-clock-fill" style="color: #ff6600"></i>&nbsp;
+                Duration: <%= intern.duration %> Weeks</strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-bookmark-check-fill" style="color: #ff6600"></i
+                >&nbsp; Batch No: <%= intern.batch_no %></strong
+              >
+            </div>
+          </div>
+          <div class="col showOnPhone" style="visibility: hidden">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-bookmark-check-fill" style="color: #ff6600"></i
+                >&nbsp; Batch No: <%= intern.batch_no %></strong
+              >
+            </div>
+          </div>
+          <div class="col showOnPhone" style="visibility: hidden">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-bookmark-check-fill" style="color: #ff6600"></i
+                >&nbsp; Batch No: <%= intern.batch_no %></strong
+              >
+            </div>
+          </div>
+
+          <div class="col showOnPhone mb-3" style="visibility: hidden">
+            <div class="card card-custom p-2 px-3">
+              <strong
+                ><i class="bi bi-bookmark-check-fill" style="color: #ff6600"></i
+                >&nbsp; Batch No: 2503</strong
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="px-3 text-center" style="line-height: 1.5rem">
+              <span
+                >For Technical Support:
+                <strong style="color: #ff6600"
+                  >support@rixilab.tech</strong
+                ></span
+              ><br />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main
+        class="col-md-8 m-4 p-3"
+        style="border: 1px solid #ff6600; background-color: #1e1e1e"
+      >
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills flex-nowrap mb-1 gap-2 justify-content-end">
+          <li class="nav-item">
+            <a class="nav-link active" href="#dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#projects">Projects</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#meetings">Meetings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#documents">Documents</a>
+          </li>
+          <!-- <li class="nav-item"><a class="nav-link" href="#setting">Setting</a></li> -->
+        </ul>
+
+        <!-- Sections -->
+        <section id="dashboard" class="active p-1">
+          <h2 class="fw-bold mt-2">
+            Welcome, <%= intern.name.trim().split(" ")[0] %>
+          </h2>
+          <div class="row row-cols-1 row-cols-md-3 g-3 mt-2">
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Project Assigned</h5>
+                <h1><%=totalProjects%></h1>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Attendance</h5>
+                <h1><%=attendanceRate %>%</h1>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card card-custom p-3">
+                <h5>Progress</h5>
+                <h1><%= progress%>%</h1>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <h3>College Details</h3>
+          <hr />
+          <h5>College : <%= intern.college %></h5>
+          <h5>University :<%= intern.university %></h5>
+          <h5>Course : <%= intern.course %></h5>
+          <h5>Branch : <%= intern.branch %></h5>
+          <h5>Year/Sem : <%= intern.year_sem %></h5>
+          <hr />
+          <h3>Internship Details</h3>
+          <hr />
+          <h5>Intern ID : <%= intern.intern_id %></h5>
+          <h5>Internship Domain : <%= intern.domain %></h5>
+          <h5>Internship Duration : <%= intern.duration %> Weeks</h5>
+          <h5>Mentor : <%= mentorName %></h5>
+        </section>
+
+        <section id="projects" class="p-1">
+          <h2 class="fw-bold mt-2">
+            Your Projects Timeline
+            <span style="color: #ff6600"><%= progress %>%</span>
+          </h2>
+          <p>You can upload and download your assigned project here!</p>
+          <hr />
+
+          <progress
+            value="<%= progress %>"
+            max="100"
+            style="
+              height: 10px;
+              width: 100%;
+              background-color: #ff6600 !important;
+              border-radius: 10px;
+              overflow: hidden;
+              margin-bottom: 8px;
+            "
+          ></progress>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="row">
+                <% if (intern.projectAssigned && intern.projectAssigned.length >
+                0) { %> <% intern.projectAssigned.forEach(sub => { const proj =
+                projects.find(p => p._id.toString() ===
+                sub.projectId.toString()); %>
+
+                <div class="col-12 mb-3">
+                  <div
+                    class="card card-custom d-flex flex-row align-items-center justify-content-between p-3"
+                    style="border: 1px solid #ff6600"
+                  >
+                    <!-- Project Info -->
+                    <div>
+                      <h5 class="fw-bold mb-1 text-white">
+                        <%= proj ? proj.title : 'N/A' %>
+                      </h5>
+                      <p class="mb-0 text-white">
+                        <%= proj ? proj.description : '' %> <% if (sub.status
+                        === 'accepted') { %>
+                        <span
+                          style="color: #00ff66; margin-left: 8px"
+                          class="onBigScreen"
+                          >(<%= sub.status.toUpperCase() %>)</span
+                        >
+                        <% } else if (sub.status === 'rejected') { %>
+                        <span
+                          style="color: #ff3300; margin-left: 8px"
+                          class="onBigScreen"
+                          >(<%= sub.status.toUpperCase() %>)</span
+                        >
+                        <% } %>
+                      </p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 phone">
+                      <a
+                        href="<%= proj ? proj.downloadLink : '#' %>"
+                        target="_blank"
+                        class="btn btn-sm"
+                        style="border: 1px solid #ff6600; color: #ff6600"
+                        >Download</a
+                      >
+                      <% if (sub.status === 'accepted') { %>
+                      <button
+                        style="color: #00ff66"
+                        class="btn btn-sm onMobile"
+                        disabled
+                      >
+                        (<%= sub.status.toUpperCase() %>)
+                      </button>
+                      <% } else if (sub.status === 'rejected') { %>
+                      <button
+                        style="color: #ff3300"
+                        class="btn btn-sm onMobile"
+                        disabled
+                      >
+                        (<%= sub.status.toUpperCase() %>)
+                      </button>
+                      <% } %> <% if (sub.status !== 'accepted' && proj.isHidden != true) { %>
+                      <a
+                        href="<%= proj ? proj.uploadLink : '#' %>"
+                        target="_blank"
+                        class="btn btn-outline-primary btn-sm px-3"
+                        >Upload</a
+                      >
+                      <% } else { %>
+                        <% if (sub.status !== 'accepted' && proj.isHidden == true) { %>
+                      <button class="btn btn-sm btn-outline-danger px-3" disabled>
+                        Closed
+                      </button>
+                      <% } else { %>
+                        <button class="btn btn-sm btn-outline-success" disabled>
+                        Uploaded
+                      </button>
+                      <% } %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+
+                <% }) %> <% } else { %>
+                <p>No projects assigned yet.</p>
+                <% } %> 
+                 <% if (assignedQuizzes.length > 0 && progress == 100) {
+                %> <% assignedQuizzes.forEach(q => { %>
+                <div class="col-12 mb-3">
+                  <div
+                    class="card shadow-sm  rounded-4 p-3 d-flex flex-row align-items-center justify-content-between"
+                    style="
+                      background: linear-gradient(135deg, #1f1f1f, #2c2c2c); border: 1px solid #ff6600;
+                    "
+                  >
+                    <div class="d-flex align-items-center gap-3">
+                      <div
+                        class="icon  text-dark rounded-circle d-flex align-items-center justify-content-center"
+                        style="width: 50px; height: 50px; background-color: #ff6600;"
+                      >
+                        <i class="bi bi-question-circle-fill fs-4"></i>
+                      </div>
+
+                      <div class="info-content">
+                        <h5 class="fw-bold mb-1 text-white">
+                          <%= q.quiz.title %>
+                        </h5>
+                        <p class="mb-1 text-white small">
+                          Score: <strong><%= intern.quiz_score %></strong>
+                          <% if (q.attemptCount >= 1) { %>
+                            <% if (intern.isPassed) { %>
+                              <span class="badge bg-success ms-2  ">Pass</span>
+                            <% } else { %>
+                              <span class="badge bg-danger ms-2">Fail</span>
+                            <% } %>
+                          <% } %>
+                           &nbsp;Attempts: <%= q.attemptCount %> / 2
+                        </p>
+                        <p class="mb-0 text-white small">
+                         
+                        </p>
+                      </div>
+                    </div>
+
+                    <% if (q.isClosed) { %>
+  <button class="btn btn-danger rounded-3 px-3" disabled>
+    Closed
+  </button>
+<% } else if (q.attemptCount >= 2) { %>
+  <button class="btn btn-secondary rounded-3 px-3" disabled>
+    No Attempts Left
+  </button>
+<% } else { %>
+  <a
+    href="/intern/quiz/<%= q.quiz._id %>"
+    class="btn btn-outline-success rounded-3 px-3"
+    id="startQuizBtn"
+  >
+    Start Quiz
+  </a>
+<% } %>
+
+                  </div>
+                </div>
+                <% }) %> <% } %>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="meetings" class="p-1">
+          <h2 class="fw-bold mt-2">Meetings</h2>
+          <p class="text-white">Meetings here...</p>
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="row">
+                <% if (assignedMeetings && assignedMeetings.length > 0) { %> <%
+                assignedMeetings.forEach(meeting => { %>
+                <div class="col-12 mb-3">
+                  <div
+                    class="card card-custom d-flex flex-row align-items-center justify-content-between p-3"
+                    style="border: 1px solid #ff6600"
+                  >
+                    <!-- Meeting Info -->
+                    <div>
+                      <h5 class="fw-bold mb-1 text-white">
+                        <%= meeting.title || 'Untitled Meeting' %>
+                      </h5>
+                      <p
+                        class="mb-0 text-secondary meeting-time"
+                        data-time="<%= meeting.scheduledTime %>"
+                      ></p>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 align-items-center phone">
+                      <a
+                        href="<%= meeting.link || '#' %>"
+                        target="_blank"
+                        class="btn btn-outline-primary px-3 btn-sm"
+                        >Join</a
+                      >
+
+                      <span
+                        class="badge <% if (meeting.attendance === 'present') { %> bg-success <% } else if (meeting.attendance === 'absent') { %> bg-danger <% } else { %> bg-secondary <% } %>"
+                        style="
+                          height: 1.9rem;
+                          text-align: center;
+                          padding-top: 0.6rem;
+                        "
+                      >
+                        <%= meeting.attendance ?
+                        meeting.attendance.toUpperCase() : 'N/A' %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <p>No meetings assigned yet.</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="documents" class="p-1">
+          <h2 class="fw-bold mt-2">Internship Documents</h2>
+          <p class="text-white">
+            Your can download your internship documents here...
+          </p>
+          <div class="row g-3">
+            <!-- Offer Letter -->
+            <div class="col-12">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-file-earmark-text-fill fs-3"
+                      style="color: #ff6600"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      Internship Offer Letter
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Download your offer letter from here
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="<%= intern.offer_letter || `/download-offer-letter/${intern._id}` %>"
+                  target="_blank"
+                  class="btn btn-outline-success"
+                >
+                  <i class="bi bi-download"></i>
+                </a>
+              </div>
+            </div>
+            <% if (progress === 100) { %>
+                <div class="col-12">
+                  <div
+                    class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                    style="border: 1px solid #ff6600"
+                  >
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="info-icon text-warning">
+                        <i
+                          class="bi bi-file-text fs-3"
+                          style="color: #ff6600"
+                        ></i>
+                      </div>
+                      <div class="info-content">
+                        <h5 class="fw-bold mb-1 text-white">
+                          Internship Feedback
+                        </h5>
+                        <p class="mb-0 text-white">
+                          Internship Feedback Submission
+                        </p>
+                      </div>
+                    </div>
+                    <a
+                      href="https://forms.gle/EVts4YfhRZCnp6aj8"
+                      target="_blank"
+                      class="btn btn-outline-success"
+                    >
+                      <i class="bi bi-arrow-right"></i>
+                    </a>
+                  </div>
+                </div>
+                <% } %>
+
+            <!-- Certificate -->
+            <div class="col-12">
+              <div
+                class="card doc-card d-flex flex-row align-items-center justify-content-between p-3"
+                style="border: 1px solid #ff6600"
+              >
+                <div class="d-flex align-items-center gap-3">
+                  <div class="info-icon text-warning">
+                    <i
+                      class="bi bi-file-earmark-medical-fill fs-3"
+                      style="color: #ff6600"
+                    ></i>
+                  </div>
+                  <div class="info-content">
+                    <h5 class="fw-bold mb-1 text-white">
+                      Internship Certificate
+                    </h5>
+                    <p class="mb-0 text-white">
+                      Available when your internship is completed
+                    </p>
+                  </div>
+                </div>
+                <% if (intern.certificate_link) { %>
+  <a
+    href="<%= intern.certificate_link %>"
+    download
+    class="btn btn-outline-success"
+  >
+    <i class="bi bi-download"></i>
+  </a>
+
+<% } else if (intern.completion_date) { %>
+  <a
+    href="/download-certificate/<%= intern._id %>"
+    target="_blank"
+    class="btn btn-outline-success"
+  >
+    <i class="bi bi-download"></i>
+  </a>
+
+<% } else { %>
+  <button
+    class="btn btn-outline-success disabled"
+    disabled
+    aria-disabled="true"
+    tabindex="-1"
+  >
+    <i class="bi bi-download"></i>
+  </button>
+<% } %>
+
+
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer id="footer" class="footer light-background">
+      <div class="copyright text-center">
+        <div
+          class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center"
+        >
+          <div
+            class="d-flex flex-column align-items-center align-items-lg-start"
+          >
+            <div>
+              © Copyright 2025 <strong><span>Rixi Lab</span></strong
+              >. All Rights Reserved
+            </div>
+            <div class="credits">
+              Designed by
+              <a
+                style="text-decoration: none; color: #ff6600"
+                href="https://www.rixilab.tech"
+                ><b>Rixi Lab</b></a
+              >
+            </div>
+          </div>
+
+          <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+            <a href="https://www.linkedin.com/company/rixilab"
+              ><i class="bi bi-linkedin"></i
+            ></a>
+            <a href="https://www.facebook.com/rixilab"
+              ><i class="bi bi-facebook"></i
+            ></a>
+            <a href="https://www.instagram.com/rixilab.in"
+              ><i class="bi bi-instagram"></i
+            ></a>
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <% if (showPasswordPopup) { %>
+    <div
+      class="modal fade"
+      id="passwordModal"
+      tabindex="-1"
+      aria-labelledby="passwordModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content shadow-lg"
+          style="background-color: #1e1e1e; border: 1px solid #ff6600"
+        >
+          <div class="modal-header">
+            <h5 class="modal-title text-white" id="passwordModalLabel">
+              Change Your Password
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form
+              action="/intern/change-password"
+              method="POST"
+              id="passwordForm"
+              novalidate
+            >
+              <div class="mb-3">
+                <label class="form-label text-white">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  class="form-control"
+                  placeholder="Enter new Password"
+                  minlength="6"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label text-white">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirm Password"
+                  required
+                  minlength="6"
+                />
+              </div>
+              <button
+                type="submit"
+                class="btn w-100 text-white"
+                style="background-color: #ff6600; font-weight: 500"
+              >
+                Update Password
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const passwordModalEl = document.getElementById("passwordModal");
+      const passwordModal = new bootstrap.Modal(passwordModalEl, {
+        backdrop: "static",
+        keyboard: false,
+      });
+      passwordModal.show();
+    </script>
+    <% } %> <%- include("partials/toaster") %>
+
+    <!-- Scroll Top -->
+    <a
+      href="#"
+      id="scroll-top"
+      class="scroll-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+
+    <!-- Vendor JS Files -->
+    <script src="/js/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/vendor/aos/aos.js"></script>
+    <script src="/js/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="/js/vendor/purecounter/purecounter_vanilla.js"></script>
+    <script src="/js/vendor/typed.js/typed.umd.js"></script>
+    <script src="/js/vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="/js/main.js"></script>
+    <script type="module" src="/js/login.js"></script>
+    <script src="/js/intern.js"></script>
+   <script>
+     window.addEventListener("resize", function () {
+      if (window.innerWidth < 1024) {
+        document.querySelector('startQuizBtn').addEventListener("click",()=>{
+        window.location.href = "/mobile-blocked";
+        })
+      }
+  });
+  </script>
+  </body>
+</html>

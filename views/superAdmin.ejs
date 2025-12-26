@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Super Admin Dashboard</title>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+
+  <link href="img/Rixi Lab New Logo PNG.png" rel="icon" />
+  <link href="img/apple-touch-icon.png" rel="apple-touch-icon" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/superAdmin.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<style>
+  #pageLoader {
+    z-index: 1055; /* above modals */
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+
+  #pageLoader.hidden {
+    opacity: 0;
+    visibility: hidden;
+  }
+</style>
+
+
+</head>
+<body>
+ <%- include('partials/loader') %>
+
+  <div class="d-flex">
+  <button class="btn btn-primary d-md-none" id="sidebarToggle" style="position: fixed; top: 10px; left: 10px; z-index: 1050;">
+  <i class="bi bi-list"></i>
+</button>
+    <!-- Sidebar -->
+  <div class="sidebar position-fixed w-20 d-flex flex-column justify-content-between" style="height: 100vh;">
+  <div>
+    <h2 class="text-center" style="font-weight: bold; margin-bottom: 0px;">
+      <img src="/img/Rixi Lab New Logo PNG.png" width="35px" alt="Logo"> Rixi Lab
+    </h2>
+    <p style="font-size: 11px;text-align: center; font-style: italic;">Rethink Innovate eXecute Inspire</p>
+<h4 class="text-center" style="font-size:large; color: #ff6600; margin-bottom: 0px;">Super Admin Panel</h4>
+    <br/>
+    <a href="#dashboard"><i class="bi bi-person-lines-fill"></i> Dashboard</a>
+    <a href="#viewAdmin"><i class="bi bi-person-workspace"></i> View Admins</a>
+    <!-- <a href="#registration"><i class="bi bi-clipboard-check"></i> Registrations</a> -->
+    <a href="#viewInterns"><i class="bi bi-people"></i> View Interns</a>
+    <a href="#completedInterns"><i class="bi bi-person-check"></i> Certified Interns</a>
+    <a href="#viewAmbassador"><i class="bi bi-person-circle"></i> View Ambassador</a>
+    <a href="#offerLetterMail"><i class="bi bi-envelope-paper"></i> Offer Letter Mail</a>
+    <a href="#createAdmin"><i class="bi bi-person-plus"></i> Create Admin</a>
+     <a href="#createAmbassador"><i class="bi bi-person-plus"></i> Create Ambassador</a>
+    <!-- <a href="#confirmationMail"><i class="bi bi-envelope-check"></i> Confirmation Mail</a> -->
+    <!-- <a href="#offerLetterMail"><i class="bi bi-envelope-paper"></i> Offer Letter Mail</a> -->
+    <!-- <a href="#completionMail"><i class="bi bi-envelope-heart"></i> Certificate Mail</a> -->
+    <a href="#meetingsSection"><i class="bi bi-camera-video-fill"></i> Schedule Meeting</a>
+    <a href="#dashboard" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="bi bi-box-arrow-right"></i> Logout</a>
+  </div>
+
+  <!-- Footer at the bottom -->
+  <div class="text-center mb-2" style="font-size: 0.85rem; color: #888;">
+    © Copyright 2025 Rixi Lab.<br/> All Rights Reserved <br/><span style="font-size: smaller;">Developed by Anunay Anand (Director)</span>
+  </div>
+</div>
+
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1">
+<!--Header Section -->
+<!-- 🔹 Header + Notification Bell Container -->
+<div class="d-flex justify-content-between align-items-center mb-3 px-3  ">
+
+  <!-- 🏷️ Left Side: Header -->
+  <div class="header">
+    <h4 class="section-title mb-0">
+      Welcome to Rixi Lab, <%= superAdmin.name %> - <%= superAdmin.designation %>
+    </h4>
+  </div>
+
+  <!-- 🔔 Right Side: Notification Bell -->
+  <div class="dropdown position-relative">
+  <button
+    class="btn btn-light position-relative"
+    id="notificationButton"
+    data-bs-toggle="dropdown"
+    aria-expanded="false">
+    <i class="bi bi-bell fs-4"></i>
+
+    <% const unreadCount = notifications ? notifications.length : 0; %>
+    <% if (unreadCount > 0) { %>
+      <!-- 🔴 Red Dot -->
+      <span
+        id="notificationDot"
+        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+        <span class="visually-hidden">New alerts</span>
+      </span>
+    <% } %>
+  </button>
+
+  <!-- 🔽 Dropdown Menu -->
+  <ul
+    class="dropdown-menu dropdown-menu-end shadow p-2"
+    style="width: 320px; max-height: 400px; overflow-y: auto;"
+    id="notificationList">
+
+    <li class="dropdown-header fw-bold d-flex justify-content-between align-items-center">
+      <span>Notifications</span>
+      <% if (notifications && notifications.length > 0) { %>
+        <button id="clearAllBtn" class="btn btn-sm btn-danger">Mark All</button>
+      <% } %>
+    </li>
+    <hr class="my-1">
+
+    <% if (notifications && notifications.length > 0) { %>
+      <% notifications.forEach(n => { %>
+        <li class="p-2 border-bottom d-flex justify-content-between align-items-start" data-id="<%= n._id %>">
+          <div style="white-space: normal;">
+            <small><strong><%= n.title %></strong></small><br>
+            <small><%= n.message %></small><br>
+            <small class="text-muted"><%= new Date(n.createdAt).toLocaleString() %></small>
+          </div>
+          <button class="btn btn-sm btn-outline-success mark-read-btn" title="Mark as Read">✔</button>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li class="p-3 text-center text-muted">No new notifications 🎉</li>
+    <% } %>
+  </ul>
+  </div>
+
+  <!-- 📧 Offer Letter Bell -->
+  <button
+    class="btn btn-light position-relative"
+    id="offerLetterButton">
+    <i class="bi bi-envelope-paper fs-4"></i>
+
+    <% const pendingOfferCount = interns.filter(i => !i.offer_letter_sent).length; %>
+    <% if (pendingOfferCount > 0) { %>
+      <!-- 🔴 Red Dot -->
+      <span
+        id="offerLetterDot"
+        class="position-absolute top-0 start-100 translate-middle p-1 bg-warning border border-light rounded-circle">
+        <span class="visually-hidden">Pending offer letters</span>
+      </span>
+    <% } %>
+  </button>
+
+
+
+</div>
+
+<!-- Divider -->
+<hr class="mt-2">
+
+      <!-- Welcome Message -->
+
+
+      <!-- Dashboard -->
+<section id="dashboard" >
+
+
+
+  <!-- Stats Row -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-3">
+      <div class="card stat-card text-center p-3">
+        <h6 class="text-muted">Total Admins</h6>
+        <p class="display-5 fw-bold text-primary mb-0"><%= admins.length %></p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card text-center p-3">
+        <h6 class="text-muted">Total Interns</h6>
+        <p class="display-5 fw-bold text-success mb-0"><%= interns.length %></p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card text-center p-3">
+        <h6 class="text-muted">Total Batches</h6>
+        <p class="display-5 fw-bold text-info mb-0"><%= batches.length %></p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card stat-card text-center p-3">
+        <h6 class="text-muted">Certified Interns</h6>
+        <p class="display-5 fw-bold text-warning mb-0"><%= certifiedInternsCount %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile + Notifications -->
+  <div class="row g-4">
+    
+    <!-- Left: Super Admin Profile -->
+    <div class="col-md-6" style="max-height: fit-content !important;">
+      <div class="card shadow-sm p-3 h-100 profile-card fixed-profile">
+        <div class="d-flex align-items-center mb-3">
+          <img src="<%= superAdmin.img_url %>" 
+               alt="Super Admin Image" 
+               class="rounded-circle me-3 profile-img" data-bs-toggle="modal" data-bs-target="#updateProfileModal" style="cursor: pointer;">
+          <div>
+            <h4 class="mb-2"><%= superAdmin.name %></h4>
+            <span class="badge bg-success">Chief Exceutive Officer</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6"><p><strong>Email:</strong> <%= superAdmin.email %></p></div>
+          <div class="col-6"><p><strong>Phone:</strong> <%= superAdmin.phone %></p></div>
+        </div>
+        <div class="row " style=" text-align: justify;">
+          <p style="padding-right:20px;">I’m Rajnish Sharma, founder of Rixi Lab, driven by passion for technology and design. Rixi Lab reflects my vision to create innovative, user-friendly, and impactful digital solutions. We aim to empower businesses with custom websites, responsive designs, UI/UX, and e-commerce platforms, turning ideas into meaningful online experiences.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Notifications -->
+<div class="col-md-6">
+  <div class="card shadow-sm p-3 h-100 profile-card scrollable-notice">
+    
+    <!-- Header + Add Notice Button inline -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">📢 Manage Notices</h5>
+      
+      <!-- Add Notice button triggers form submit -->
+      <button type="submit" class="btn btn-outline-primary btn-sm px-3 rounded-pill" form="noticeForm">Circulate</button>
+    </div>
+
+    <!-- Add Notice Form -->
+    <form action="/superAdmin/notice" method="POST" class="mb-3" id="noticeForm">
+      <div class="mb-2">
+        <input type="text" name="title" class="form-control" placeholder="Notice Title" required>
+      </div>
+      <div class="mb-2">
+        <textarea name="description" class="form-control" placeholder="Notice Description" required></textarea>
+      </div>
+    </form>
+
+    <!-- List Notices -->
+  <% if (superAdmin.notice && superAdmin.notice.length > 0) { %>
+  <ul class="list-group">
+    <% superAdmin.notice.slice().reverse().forEach((n, i) => { %>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong><%= n.title %></strong>
+        </div>
+        <form action="/superAdmin/notice/delete/<%= superAdmin.notice.length - 1 - i %>" method="POST" style="display:inline;">
+          <button type="submit" class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm">Delete</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p class="text-muted">No notices yet.</p>
+<% } %>
+
+  </div>
+</div>
+
+
+
+
+
+  </div>
+</section>
+
+
+
+
+
+<!-- Create Admin -->
+<section id="createAdmin" style="display:none;">
+  <div class="card p-4 shadow-sm mb-4" style="border-color: #ff6600 !important;">
+    <h4 class="text-center mb-4">Create Employee / Admin</h4>
+    <form action="/create-admin" method="POST" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
+      
+      <!-- Row 1 -->
+      <div class="col-md-6">
+        <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+      </div>
+      <div class="col-md-6">
+        <input type="email" name="email" class="form-control" placeholder="Email" required>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="col-md-6">
+        <input type="text" name="password" class="form-control" placeholder="Password" required>
+      </div>
+      <div class="col-md-6">
+        <select name="domain" class="form-select" required>
+          <option value="" disabled selected>Domain</option>
+          <option value="Web Development">Web Development</option>
+          <option value="Graphics Designing">Graphics Designing</option>
+          <option value="Data Analytics">Data Analytics</option>
+          <option value="DSA">DSA</option>
+          <option value="Java Programming">Java Programming</option>
+          <option value="Python Programming">Python Programming</option>
+          <option value="Full Stack Development">Full Stack Development</option>
+        </select>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="col-md-6">
+        <input type="text" name="emp_id" class="form-control" placeholder="Employee ID" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="phone" class="form-control" placeholder="Phone" required>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="col-md-6">
+        <input type="text" name="designation" class="form-control" placeholder="Designation" required>
+      </div>
+      <div class="col-md-6">
+       <input type="file" name="image" id="img" class="form-control" accept="image/*">
+      </div>
+
+      <!-- Button Centered -->
+      <div class="col-12 text-center mt-3">
+        <button class="btn btn-primary px-5">Create Admin</button>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- Create Ambassador -->
+<section id="createAmbassador" style="display:none;">
+  <div class="card p-4 shadow-sm mb-4" style="border-color: #ff6600 !important;">
+    <h4 class="text-center mb-4">Create Ambassador</h4>
+    <form action="/create-ambassador" method="POST" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
+
+      <!-- Row 1 -->
+      <div class="col-md-6">
+        <input type="text" name="ambassador_id" class="form-control" placeholder="Ambassador ID" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="col-md-6">
+        <input type="email" name="email" class="form-control" placeholder="Email" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="password" class="form-control" placeholder="Password" required>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="col-md-6">
+        <input type="text" name="phone" class="form-control" placeholder="Phone" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="college" class="form-control" placeholder="College" required>
+      </div>
+
+      <!-- Row 4 -->
+      <div class="col-md-6">
+        <input type="text" name="university" class="form-control" placeholder="University" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="designation" class="form-control" placeholder="Designation" required>
+      </div>
+
+      <!-- Row 5 -->
+      <div class="col-md-6">
+         <input type="file" name="image" class="form-control" accept="image/*">
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="address[street]" class="form-control" placeholder="Street" required>
+      </div>
+
+      <!-- Row 6 -->
+      <div class="col-md-6">
+        <input type="text" name="address[city]" class="form-control" placeholder="City" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="address[state]" class="form-control" placeholder="State" required>
+      </div>
+
+      <!-- Row 7 -->
+      <div class="col-md-6">
+        <input type="text" name="address[country]" class="form-control" placeholder="Country" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="address[pincode]" class="form-control" placeholder="Pincode" required>
+      </div>
+
+      <!-- Row 8 -->
+      <div class="col-md-6">
+        <select name="gender" class="form-select" required>
+          <option value="" disabled selected>Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <input type="url" name="linkedin_profile_url" class="form-control" placeholder="LinkedIn URL" required>
+      </div>
+
+      <!-- Row 9: Social Profiles -->
+      <div class="col-md-6">
+        <input type="url" name="insta_profile_url" class="form-control" placeholder="Instagram URL" required>
+      </div>
+      <div class="col-md-6">
+        <input type="text" name="referralId" class="form-control" placeholder="Reffral ID" required>
+      </div> <!-- Empty div to keep layout -->
+
+      <!-- Row 10: Submit Button (centered) -->
+      <div class="col-12 text-center mt-3">
+        <button class="btn btn-primary px-5">Create Ambassador</button>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<!-- View Ambassador -->
+<section id="viewAmbassador" style="display:none;">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 ">
+  <h4 class="section-title mb-0">List of Ambassadors</h4>
+  <div class="d-flex align-items-center" style="gap: 10px;">
+    <input 
+      type="text" 
+      id="ambassadorSearch" 
+      class="form-control shadow-sm" 
+      placeholder="Search by Name or Ambassador ID..." 
+      style="max-width: 300px; border-radius: 25px; padding: 8px 15px;"
+    >
+    <button 
+      id="clearFilter" 
+      class="btn btn-outline-secondary shadow-sm rounded-pill px-3"
+      style="white-space: nowrap;"
+    >
+      Clear
+    </button>
+  </div>
+</div>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% ambassadors.forEach(ambassador => { %>
+      <div class="col ambassador-card">
+        <div class="card shadow-sm p-3 h-100 profile-card" style="border-radius: 20px;">
+
+          <!-- Top: Profile Image + Name + Badge -->
+          <div class="d-flex align-items-center mb-3">
+            <img src="<%= ambassador.img_url %>" 
+                 alt="<%= ambassador.name %>" 
+                 class="rounded-circle me-3 profile-img"
+                 style="width:80px; height:80px; object-fit:cover;">
+            <div>
+              <h4 class="mb-1 ambassador-name"><%= ambassador.name %></h4>
+              <span class="badge bg-info"><%= ambassador.badge %></span>
+            </div>
+          </div>
+
+          <!-- Info List -->
+          <dl class="row mb-3 small">
+            <dt class="col-5 text-muted ">Ambassador ID</dt>
+            <dd class="col-7 text-end fw-bold mb-2 ambassador-id"><%= ambassador.ambassador_id %></dd>
+
+            <dt class="col-5 text-muted">Referral ID</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= ambassador.referralId %></dd>
+
+            <dt class="col-5 text-muted">Email</dt>
+            <dd class="col-7 text-end fw-bold mb-2 text-truncate" title="<%= ambassador.email %>">
+              <%= ambassador.email %>
+            </dd>
+
+            <dt class="col-5 text-muted">Phone</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= ambassador.phone %></dd>
+
+            <dt class="col-5 text-muted">Designation</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= ambassador.designation %></dd>
+
+            <dt class="col-5 text-muted">College</dt>
+            <dd class="col-7 text-end fw-bold mb-2 text-truncate" title="<%= ambassador.college %>">
+              <%= ambassador.college %>
+            </dd>
+
+            <dt class="col-5 text-muted">University</dt>
+            <dd class="col-7 text-end fw-bold mb-2 text-truncate" title="<%= ambassador.university %>">
+              <%= ambassador.university %>
+            </dd>
+
+            <dt class="col-5 text-muted">Interns Referred</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= ambassador.internCount %></dd>
+
+            <dt class="col-5 text-muted">Joined</dt>
+            <dd class="col-7 text-end fw-bold mb-0">
+              <%= new Date(ambassador.joining_date)
+                    .toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"2-digit" })
+                    .replace(/\//g, "-") %>
+            </dd>
+          </dl>
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-center gap-2 mt-auto flex-wrap">
+            <a href="/superAdmin/ambassador/<%= ambassador._id %>" 
+               class="btn btn-outline-primary btn-sm px-3 rounded-pill shadow-sm" target="_blank">View</a>
+            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#updateAmbassadorModal<%= ambassador._id %>">Update</button>
+            <button class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#deleteAmbassadorModal<%= ambassador._id %>">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Ambassador Modal -->
+      <div class="modal fade mt-0" id="updateAmbassadorModal<%= ambassador._id %>" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Update <%= ambassador.name %></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="/update-ambassador/<%= ambassador._id %>" method="POST" class="needs-validation" novalidate>
+        <div class="modal-body">
+          <div class="row g-3">
+
+            <!-- Row 1 -->
+            <div class="col-md-6">
+              <label class="form-label">Name <span class="text-danger">*</span></label>
+              <input type="text" name="name" class="form-control" value="<%= ambassador.name %>" placeholder="Full Name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" name="email" class="form-control" value="<%= ambassador.email %>" placeholder="Email Address" required>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="col-md-6">
+              <label class="form-label">Password</label>
+              <input type="text" name="password" class="form-control" placeholder="Enter new password (leave blank if unchanged)">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ambassador ID <span class="text-danger">*</span></label>
+              <input type="text" name="ambassador_id" class="form-control" value="<%= ambassador.ambassador_id %>" placeholder="Unique ID" required>
+            </div> 
+
+            <!-- Row 3 -->
+            <div class="col-md-6">
+              <label class="form-label">Designation</label>
+              <input type="text" name="designation" class="form-control" value="<%= ambassador.designation %>" placeholder="Designation">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone <span class="text-danger">*</span></label>
+              <input type="text" name="phone" class="form-control" value="<%= ambassador.phone %>" placeholder="Phone Number" required>
+            </div>
+            <!-- Row 4 -->
+            <div class="col-md-6">
+              <label class="form-label">Reffral Code</label>
+              <input type="text" name="reffralID" class="form-control" value="<%= ambassador.referralId %>" readonly>
+            </div>
+
+            
+            <div class="col-md-6">
+  <label class="form-label">Mail Sent</label>
+  <select name="mail_sent" class="form-select">
+    <option value="">Select Mail Type</option>
+     <option value="reset">Reset</option>
+    <option value="bronze">Bronze</option>
+    <option value="silver">Silver</option>
+    <option value="gold">Gold</option>
+  </select>
+</div>
+
+            <!-- Row 5 -->
+            <div class="col-md-6">
+              <label class="form-label">Offer Letter Link</label>
+              <input type="text" name="offer_letter_link" class="form-control" value="<%= ambassador.offer_letter_link %>" >
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Certificate Link</label>
+              <input type="text" name="certificate_link" class="form-control" value="<%= ambassador.certificate_link %>" >
+            </div>
+
+            <!-- Row 6 -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">Gender</label>
+              <select name="gender" class="form-select">
+                <option value="Male" <%= ambassador.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= ambassador.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                <option value="Other" <%= ambassador.gender === 'Other' ? 'selected' : '' %>>Other</option>
+              </select>
+            </div> -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">LinkedIn URL</label>
+              <input type="url" name="linkedin_profile_url" class="form-control" value="<%= ambassador.linkedin_profile_url %>" placeholder="LinkedIn Profile URL">
+            </div> -->
+
+            <!-- Row 7 -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">Instagram URL</label>
+              <input type="url" name="insta_profile_url" class="form-control" value="<%= ambassador.insta_profile_url %>" placeholder="Instagram Profile URL">
+            </div> -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">Street</label>
+              <input type="text" name="address[street]" class="form-control" value="<%= ambassador.address.street %>" placeholder="Street Address">
+            </div> -->
+
+            <!-- Row 8 -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">City</label>
+              <input type="text" name="address[city]" class="form-control" value="<%= ambassador.address.city %>" placeholder="City">
+            </div> -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">State</label>
+              <input type="text" name="address[state]" class="form-control" value="<%= ambassador.address.state %>" placeholder="State">
+            </div> -->
+
+            <!-- Row 9 -->
+            <!-- <div class="col-md-6">
+              <label class="form-label">Country</label>
+              <input type="text" name="address[country]" class="form-control" value="<%= ambassador.address.country %>" placeholder="Country">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Pincode</label>
+              <input type="text" name="address[pincode]" class="form-control" value="<%= ambassador.address.pincode %>" placeholder="Pincode">
+            </div> -->
+
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+      <!-- Delete Ambassador Modal -->
+      <div class="modal fade" id="deleteAmbassadorModal<%= ambassador._id %>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete <%= ambassador.name %>?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">Are you sure you want to delete this ambassador?</div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form action="/delete-ambassador/<%= ambassador._id %>" method="POST">
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <% }) %>
+  </div>
+</section>
+
+      <!-- View Admins -->
+     <section id="viewAdmin" style="display:none;">
+  <h4 class="section-title mb-3">List of Employees / Admin</h4>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <% admins.forEach(admin => { %>
+      <div class="col">
+        <div class="card shadow-sm p-3 h-100 profile-card" style="border-radius: 20px;">
+
+          <!-- Top: Profile Image + Name + Badge -->
+          <div class="d-flex align-items-center mb-3">
+            <img src="<%= admin.img_url %>" 
+                 alt="<%= admin.name %>" 
+                 class="rounded-circle me-3 profile-img"
+                 style="width:80px; height:80px; object-fit:cover;">
+            <div>
+              <h4 class="mb-1"><%= admin.name %></h4>
+              <span class="badge bg-success"><%= admin.designation %></span>
+            </div>
+          </div>
+
+          <!-- Info List -->
+          <dl class="row mb-3 small">
+            <dt class="col-5 text-muted">Emp ID</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= admin.emp_id %></dd>
+
+            <dt class="col-5 text-muted">Email</dt>
+            <dd class="col-7 text-end fw-bold mb-2 text-truncate" title="<%= admin.email %>">
+              <%= admin.email %>
+            </dd>
+
+            <dt class="col-5 text-muted">Phone</dt>
+            <dd class="col-7 text-end fw-bold mb-2"><%= admin.phone %></dd>
+
+            <dt class="col-5 text-muted">Domain</dt>
+            <dd class="col-7 text-end fw-bold mb-2 text-truncate" title="<%= admin.domain %>">
+              <%= admin.domain %>
+            </dd>
+
+            <dt class="col-5 text-muted">Joined</dt>
+            <dd class="col-7 text-end fw-bold mb-0">
+              <%= new Date(admin.joining_date)
+                    .toLocaleDateString("en-GB", { day:"2-digit", month:"2-digit", year:"2-digit" })
+                    .replace(/\//g, "-") %>
+            </dd>
+          </dl>
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-center gap-2 mt-auto flex-wrap">
+            <a href="/superAdmin/admin/<%= admin._id %>" 
+               class="btn btn-outline-primary btn-sm px-3 rounded-pill shadow-sm" target="_blank">View</a>
+            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#updateAdminModal<%= admin._id %>">Update</button>
+            <button class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#deleteAdminModal<%= admin._id %>">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Admin Modal -->
+      <div class="modal fade mt-0" id="updateAdminModal<%= admin._id %>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Update <%= admin.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/update-user/<%= admin._id %>" method="POST" enctype="multipart/form-data" >
+              <div class="modal-body">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-control mb-2" value="<%= admin.name %>" required>
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control mb-2" value="<%= admin.email %>" required>
+                <label class="form-label">Password</label>
+                <input type="text" name="password" class="form-control mb-2"  placeholder="Enter new password (leave blank if unchanged)">
+                <label class="form-label">Emp Id</label>
+                <input type="text" name="emp_id" class="form-control mb-2" value="<%= admin.emp_id %>" required>
+                <label class="form-label">Domain</label>
+                <input type="text" name="domain" class="form-control mb-2" value="<%= admin.domain %>" required>
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control mb-2" value="<%= admin.phone %>" required>
+                <label class="form-label">Designation</label>
+                <input type="text" name="designation" class="form-control mb-2" value="<%= admin.designation %>" required>
+                <!-- <label class="form-label">Profile Image URL</label>
+                <input type="file" name="img_url" class="form-control mb-2" value="<%= admin.img_url %>" required> -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Admin Modal -->
+      <div class="modal fade" id="deleteAdminModal<%= admin._id %>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete <%= admin.name %>?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">Are you sure you want to delete this admin?</div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <form action="/delete-user/<%= admin._id %>" method="POST">
+                <button class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+      <!-- View Interns -->
+     <section id="viewInterns" style="display:none;">
+  <div class="container px-0">
+    <div class="card shadow-sm border rounded p-3" style="border: 1px solid #ff6600 !important;">
+
+      <!-- Section Header -->
+      <h4 class="text-center mb-3">Total Interns</h4>
+
+      <!-- Filters Row -->
+      <div class="row mb-3 g-2 justify-content-center flex-grow-1">
+        <div class="col-md-2">
+          <select id="batchFilter" class="form-select" onchange="applyInternFilters()">
+            <option value="all" selected>All Batches</option>
+            <% batches.forEach(batch => { %>
+              <option value="<%= batch %>">Batch <%= batch %></option>
+            <% }) %>
+          </select>
+        </div>
+
+         <!-- Domain Filter -->
+  <div class="col-md-2">
+    <select id="domainFilter" class="form-select" onchange="applyInternFilters()">
+      <option value="all" selected>All Domains</option>
+    <% 
+  const internDomains = [...new Set(interns.map(i => i.domain))];
+  internDomains.forEach(domain => { 
+%>
+  <option value="<%= domain.toLowerCase() %>"><%= domain %></option>
+<% }) %>
+
+    </select>
+  </div>
+
+ <!-- Duration Filter -->
+<div class="col-md-2">
+  <select id="durationFilter" class="form-select" onchange="applyInternFilters()">
+    <option value="all" selected>All Durations</option>
+    <% 
+      const internDurations = [...new Set(interns.map(i => i.duration))].sort((a, b) => a - b);
+      internDurations.forEach(duration => { 
+    %>
+      <option value="<%= duration %>"><%= duration %> Weeks</option>
+    <% }) %>
+  </select>
+</div>
+
+        <div class="col-md-2 flex-grow-1">
+          <input type="text" id="internSearchInput" class="form-control" placeholder="Search by Name or ID" onkeyup="applyInternFilters()">
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-secondary w-100" onclick="clearInternFilters()">Clear Filters</button>
+        </div>
+      </div>
+
+      <!-- Intern Table -->
+      <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-striped table-bordered align-middle text-center mb-0">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 2;background-color: #fff">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Domain</th>
+              <th>Intern ID</th>
+              <th>Batch</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% interns.forEach(i => { %>
+              <tr class="intern-row" data-batch="<%= i.batch_no %>"  data-duration="<%= i.duration %>" data-domain="<%= i.domain.toLowerCase() %>">
+                <td><%= i.name %></td>
+                <td><%= i.email %></td>
+                <td><%= i.domain %></td>
+                <td class="intern-id"><%= i.intern_id %></td>
+                <td><%= i.batch_no %></td>
+                <td class="d-flex justify-content-evenly">
+                  <a href="/admin/intern/<%= i._id %>" class="btn btn-outline-primary btn-sm px-3 rounded-pill shadow-sm" target="_blank">View</a>
+                  <!-- <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#updateModal<%= i._id %>">Update</button> -->
+                  <button class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= i._id %>">Delete</button>
+                </td>
+              </tr>
+
+              <!-- Delete Intern Modal -->
+              <div class="modal fade" id="deleteModal<%= i._id %>" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Delete <%= i.name %>?</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">Are you sure you want to delete this intern?</div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <form action="/delete-user/<%= i._id %>" method="POST">
+                        <button class="btn btn-danger">Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= MEETING  ================= -->
+<section id="meetingsSection" class="container my-4">
+
+  <!-- Allot Meeting Form -->
+  <div class="card mb-5 rounded-3  bg-white shadow-sm" style="border: 1px solid #ff6600 !important;">
+    <div class="card-body p-4">
+      <h4 class="text-center mb-4 fw-bold text-dark">Allot Meeting to Interns</h4>
+      <form action="/allot-meetings" method="POST" class="row g-3 needs-validation" novalidate>
+
+        <!-- Domain -->
+        <div class="col-12 col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-layers-fill"></i></span>
+            <select name="domain" class="form-select border-start-0" required>
+              <option value="" disabled selected>Select Domain</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Graphics Designing">Graphics Designing</option>
+              <option value="Data Analytics">Data Analytics</option>
+              <option value="DSA">DSA</option>
+              <option value="Java Programming">Java Programming</option>
+              <option value="Python Programming">Python Programming</option>
+              <option value="Full Stack Development">Full Stack Development</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Week -->
+        <div class="col-12 col-md-2">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-calendar-week-fill"></i></span>
+            <select name="week" class="form-select border-start-0" required>
+              <option value="" disabled selected>Week</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Batch -->
+        <div class="col-12 col-md-2">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-people-fill"></i></span>
+            <select name="batch_no" class="form-select border-start-0" required>
+              <option value="" disabled selected>Select Batch</option>
+              <% batches.forEach(batch => { %>
+                <option value="<%= batch %>">Batch <%= batch %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="col-12 col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-card-text"></i></span>
+            <input type="text" name="title" class="form-control border-start-0" placeholder="Meeting Title" required>
+          </div>
+        </div>
+
+        <!-- Link -->
+        <div class="col-12 col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-link-45deg"></i></span>
+            <input type="url" name="link" class="form-control border-start-0" placeholder="Meeting Link" required>
+          </div>
+        </div>
+
+        <!-- Scheduled Time -->
+        <div class="col-12 col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-clock-fill"></i></span>
+            <input type="text" id="meeting_datetime" name="scheduledTime" class="form-control border-start-0" placeholder="Select date & time" required>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="col-12 text-center mt-3">
+          <button class="btn btn-primary btn-lg px-5 shadow-sm rounded-pill" 
+            style="transition: 0.3s;" 
+            onmouseover="this.style.backgroundColor='#0056b3'" 
+            onmouseout="this.style.backgroundColor='#0d6efd'">
+            Allot Meeting
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Batch Filter -->
+<div class="mb-3 d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2">
+  <label for="batchFilter" class="fw-bold mb-1 mb-md-0">Filter by Batch:</label>
+  <select id="Meeting_batchFilter" class="form-select w-auto">
+    <option value="all" selected>All Batches</option>
+    <% batches.slice().sort((a, b) => a - b).forEach(batch => { %>
+      <option value="<%= batch %>">Batch <%= batch %></option>
+    <% }) %>
+  </select>
+</div>
+
+
+  <!-- Meetings Table -->
+  <div class="table-responsive shadow-sm " style="max-height: 500px; overflow-y: auto;">
+    <table class="table table-striped table-bordered align-middle text-center mb-0" style="min-width: 700px;">
+      <thead class="table-light" style="position: sticky; top: 0; z-index: 2;">
+        <tr>
+          <th>Title</th>
+          <th>Domain</th>
+          <th>Week</th>
+          <th>Scheduled Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="meetingsTableBody">
+        <% meetings.forEach(meeting => { %>
+        <tr data-batch="<%= meeting.batch_no %>">
+          <td class="text-truncate" style="max-width: 150px;"><%= meeting.title %></td>
+          <td><%= meeting.domain %></td>
+          <td><%= meeting.week %></td>
+          <td><%= new Date(meeting.scheduledTime).toLocaleString() %></td>
+          <td>
+            <span class="badge <%= meeting.status === 'upcoming' ? 'bg-success' : (meeting.status==='completed' ? 'bg-secondary' : 'bg-danger') %>">
+              <%= meeting.status.charAt(0).toUpperCase() + meeting.status.slice(1) %>
+            </span>
+          </td>
+          <td class="d-flex justify-content-evenly flex-wrap gap-1">
+            <button class="btn btn-outline-success btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#updateMeetingModal<%= meeting._id %>">Update</button>
+            <button class="btn btn-outline-danger btn-sm px-3 rounded-pill shadow-sm" data-bs-toggle="modal" data-bs-target="#deleteMeetingModal<%= meeting._id %>">Delete</button>
+          </td>
+        </tr>
+
+        <!-- Update Meeting Modal -->
+        <div class="modal fade mt-0" id="updateMeetingModal<%= meeting._id %>" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Update <%= meeting.title %></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <form action="/update-meeting/<%= meeting._id %>" method="POST">
+                <div class="modal-body">
+                  <input type="hidden" name="domain" value="<%= meeting.domain %>">
+                  <label class="form-label">Batch No.</label>
+                  <select name="batch_no" class="form-select" required>
+                    <% batches.forEach(batch => { %>
+                      <option value="<%= batch %>" <%= batch == meeting.batch_no ? "selected" : "" %>>Batch <%= batch %></option>
+                    <% }) %>
+                  </select>
+
+                  <label class="form-label mt-2">Title</label>
+                  <input type="text" name="title" class="form-control mb-2" value="<%= meeting.title %>" required>
+
+                  <label class="form-label">Link</label>
+                  <input type="url" name="link" class="form-control mb-2" value="<%= meeting.link %>" required>
+
+                  <label class="form-label">Week</label>
+                  <select name="week" class="form-select mb-2" required>
+                    <option value="1" <%= meeting.week==1 ? "selected" : "" %>>1</option>
+                    <option value="2" <%= meeting.week==2 ? "selected" : "" %>>2</option>
+                    <option value="3" <%= meeting.week==3 ? "selected" : "" %>>3</option>
+                    <option value="4" <%= meeting.week==4 ? "selected" : "" %>>4</option>
+                    <option value="6" <%= meeting.week==6 ? "selected" : "" %>>6</option>
+                    <option value="8" <%= meeting.week==8 ? "selected" : "" %>>8</option>
+                  </select>
+
+                  <label class="form-label">Scheduled Time</label>
+                  <input type="text" id="meeting_datetime" name="scheduledTime" class="form-control mb-2" placeholder="Select date & time" value="<%= meeting.scheduledTime.toISOString().slice(0,16) %>" required>
+
+                  <label class="form-label">Status</label>
+                  <select name="status" class="form-select mb-2" required>
+                    <option value="upcoming" <%= meeting.status === "upcoming" ? "selected" : "" %>>Upcoming</option>
+                    <option value="completed" <%= meeting.status === "completed" ? "selected" : "" %>>Completed</option>
+                    <option value="cancelled" <%= meeting.status === "cancelled" ? "selected" : "" %>>Cancelled</option>
+                  </select>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Meeting Modal -->
+        <div class="modal fade" id="deleteMeetingModal<%= meeting._id %>" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Delete <%= meeting.title %>?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this meeting for all interns in <%= meeting.domain %> - Batch <%= meeting.batch_no %>?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/delete-meeting/<%= meeting._id %>" method="POST">
+                  <input type="hidden" name="domain" value="<%= meeting.domain %>">
+                  <input type="hidden" name="batch_no" value="<%= meeting.batch_no %>">
+                  <button class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ================= CONFIRMATION MAIL ================= -->
+<section id="confirmationMail" style="display:none; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #ff6600 !important;">
+  <h4 class="text-center mb-4">Send Confirmation Mail</h4>
+
+  <form action="/send-confirmation-mail" method="POST" id="confirmationForm" class="needs-validation" novalidate>
+    <!-- Filters + WhatsApp + Send Button in one row -->
+    <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
+      
+      <div class="flex-grow-0">
+        <select id="filterConfirm" class="form-select" onchange="applyFilters('confirm')">
+          <option value="all">Show All</option>
+          <option value="sent">Sent</option>
+          <option value="notSent">Pending</option>
+        </select>
+      </div>
+
+      <div class="flex-grow-0">
+        <select id="batchConfirm" name="batchConfirm" class="form-select" onchange="applyFilters('confirm')" >
+          <option value="all" selected>All Batches</option>
+          <% batches.forEach(batch => { %>
+            <option value="<%= batch %>"><%= batch %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="flex-grow-1">
+        <input type="text" id="searchConfirm" class="form-control" placeholder="Search by name or email" onkeyup="applyFilters('confirm')">
+      </div>
+
+      <div class="flex-grow-1">
+        <input type="text" name="whatsappLink" id="whatsappLink" class="form-control" placeholder="WhatsApp Group Link" required>
+      </div>
+
+      <div class="flex-grow-0">
+        <button type="button" class="btn btn-secondary" onclick="clearFilters('confirm')">Clear Filters</button>
+      </div>
+
+      <div class="flex-grow-0">
+        <button class="btn btn-success" type="submit">Send Mail</button>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Batch</th>
+          <th>Status</th>
+          <th class="text-center"><input type="checkbox" id="selectAllConfirm" onclick="toggleSelectAll('confirm')" class="form-check-input"></th>
+        </tr>
+      </thead>
+      <tbody id="confirmTable">
+        <% interns.forEach(i => { %>
+          <tr data-status="<%= i.confirmationSent ? 'sent' : 'notSent' %>" 
+              data-batch="<%= i.batch_no %>" 
+              data-name="<%= i.name.toLowerCase() %>" 
+              data-email="<%= i.email.toLowerCase() %>"
+              class="<%= i.confirmationSent ? 'row-sent' : 'row-notSent' %>">
+            <td><%= i.name %></td>
+            <td><%= i.email %></td>
+            <td><%= i.batch_no %></td>
+            <td><%= i.confirmationSent ? 'Sent' : 'Not Sent' %></td>
+            <td class="text-center">
+              <% if (i.confirmationSent) { %>
+                <input type="checkbox" disabled>
+              <% } else { %>
+                <input type="checkbox" name="interns[]" value="<%= i.intern_id %>" class="confirmCheckbox form-check-input">
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+  </form>
+</section>
+
+<!-- Certified Interns Section -->
+<section id="completedInterns" style="display:none;">
+  <div class="container px-0">
+    <div class="card shadow-sm border rounded p-3 " style="border: 1px solid #ff6600 !important;">
+
+      <!-- Section Header -->
+      <h4 class="text-center mb-3">Certified Interns</h4>
+
+      <!-- Filters Row -->
+      <div class="row mb-3 g-2 justify-content-center flex-grow-1">
+        <div class="col-md-2">
+          <select id="batchFilterCompleted" class="form-select" onchange="applyCompletedFilters()">
+            <option value="all" selected>All Batches</option>
+            <% batches.forEach(batch => { %>
+              <option value="<%= batch %>">Batch <%= batch %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <select id="domainFilterCompleted" class="form-select" onchange="applyCompletedFilters()">
+            <option value="all" selected>All Domains</option>
+            <% let domains = [...new Set(interns.map(i => i.domain))]; %>
+            <% domains.forEach(domain => { %>
+              <option value="<%= domain %>"><%= domain %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <!-- Duration Filter -->
+        <div class="col-md-2">
+          <select id="durationFilterCompleted" class="form-select" onchange="applyCompletedFilters()">
+            <option value="all" selected>All Durations</option>
+            <% 
+              const completedDurations = [...new Set(interns.map(i => i.duration))].sort((a, b) => a - b);
+              completedDurations.forEach(duration => { 
+            %>
+              <option value="<%= duration %>"><%= duration %> Weeks</option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="col-md-2 flex-grow-1">
+          <input type="text" id="completedSearchInput" class="form-control" placeholder="Search by Intern ID" onkeyup="applyCompletedFilters()">
+        </div>
+
+        <div class="col-md-2">
+          <button class="btn btn-secondary w-100" onclick="clearCompletedFilters()">Clear Filters</button>
+        </div>
+      </div>
+
+      <!-- Intern Table -->
+      <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-striped table-bordered align-middle text-center mb-0">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 2; background-color: #fff;">
+            <tr>
+              <th>Name</th>
+              <th>Domain</th>
+              <th>Batch</th>
+              <th>Duration</th>
+              <th>Intern ID</th>
+              <th>Quiz Score</th>
+              <th>Status</th>
+              <th>Screenshot</th>
+              <th>Update</th>
+            </tr>
+          </thead>
+
+          <tbody id="completedInternTable">
+            <% interns
+              .filter(i => i.intern_progress === 100 && i.quizAssignments.length != 0)
+              .forEach(i => { %>
+
+              <tr class="completed-intern-row"
+                  data-batch="<%= i.batch_no %>"
+                  data-domain="<%= i.domain %>"
+                  data-duration="<%= i.duration %>"
+                  data-id="<%= i._id %>">
+
+                <td><%= i.name %></td>
+                <td><%= i.domain %></td>
+                <td><%= i.batch_no %></td>
+                <td><%= i.duration %> Weeks</td>
+                <td class="intern-id"><%= i.intern_id %></td>
+                <td class="quiz-score"><%= i.quiz_score %></td>
+
+                <td class="status-badge">
+                  <% if (i.quizAssignments && i.quizAssignments.some(q => q.attemptCount >= 1)) { %>
+                    <% if (i.isPassed) { %>
+                      <span class="badge bg-success">Pass</span>
+                    <% } else { %>
+                      <span class="badge bg-danger">Fail</span>
+                    <% } %>
+                  <% } %>
+                </td>
+
+                <td>
+                  <% if (i.screenshot_img) { %>
+                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#screenshotModal<%= i._id %>">
+                      <i class="bi bi-eye"></i> View
+                    </button>
+
+                    <!-- Screenshot Modal -->
+                    <div class="modal fade" id="screenshotModal<%= i._id %>" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Screenshot - <%= i.name %></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                          </div>
+                          <div class="modal-body text-center">
+                            <img src="<%= i.screenshot_img %>" alt="Screenshot" class="img-fluid">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% } %>
+                </td>
+
+                <!-- Update Button & Modal -->
+                <td>
+                  <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill"
+                          data-bs-toggle="modal"
+                          data-bs-target="#updateModal<%= i._id %>">
+                     Update
+                  </button>
+
+                  <div class="modal fade" id="updateModal<%= i._id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <h5 class="modal-title">Update Intern - <%= i.name %></h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                       <div class="modal-body">
+
+  <input type="hidden" id="uid-<%= i._id %>" value="<%= i._id %>">
+
+  <!-- ROW 1 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Status</label>
+      <select id="isPassed-<%= i._id %>" class="form-select">
+        <option value="true" <%= i.isPassed ? 'selected' : '' %>>Pass</option>
+        <option value="false" <%= !i.isPassed ? 'selected' : '' %>>Fail</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ROW 2 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Final Score</label>
+      <input type="number" id="quizScore-<%= i._id %>" class="form-control"
+             value="<%= i.quiz_score %>" min="0">
+    </div>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Attempt Count</label>
+      <input type="number" id="attemptCount-<%= i._id %>" class="form-control"
+             value="<%= i.quizAssignments?.[0]?.attemptCount || 0 %>" min="0" max="2">
+    </div>
+  </div>
+
+  <!-- ROW 4 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Quiz Score</label>
+      <input type="number" id="assignmentScore-<%= i._id %>" class="form-control"
+             value="<%= i.quizAssignments?.[0]?.score || 0 %>" min="0">
+    </div>
+  </div>
+
+  <!-- ROW 5 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Certificate ID</label>
+      <input type="text" id="certificateId-<%= i._id %>" class="form-control"
+             value="<%= i.certificate_id %>">
+    </div>
+  </div>
+
+  <!-- ROW 6 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Certificate Link</label>
+      <input type="text" id="certificateLink-<%= i._id %>" class="form-control"
+             value="<%= i.certificate_link %>">
+    </div>
+  </div>
+
+  <!-- ROW 7 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Starting Date</label>
+      <input type="date" id="startingDate-<%= i._id %>" class="form-control"
+             value="<%= i.starting_date ? new Date(i.starting_date).toISOString().split('T')[0] : '' %>">
+    </div>
+  </div>
+
+  <!-- ROW 8 -->
+  <div class="row align-items-center mb-3">
+    <div class="col-12 d-flex align-items-center">
+      <label class="form-label mb-0 me-3" style="width: 180px;">Completion Date</label>
+      <input type="date" id="completionDate-<%= i._id %>" class="form-control"
+             value="<%= i.completion_date ? new Date(i.completion_date).toISOString().split('T')[0] : '' %>">
+    </div>
+  </div>
+
+</div>
+
+                        <div class="modal-footer">
+                          <button class="btn btn-success" onclick="updateIntern('<%= i._id %>')">
+                            Save Changes
+                          </button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </td>
+              </tr>
+
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Registrations Section -->
+<section id="registration" style="display:none;">
+  <div class="container px-0">
+    <div class="card shadow-sm border rounded p-3" style="border: 1px solid #ff6600 !important;">
+
+      <!-- Section Header -->
+      <h4 class="text-center mb-3">Internship Registrations</h4>
+
+      <!-- Registrations Table -->
+      <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+        <table class="table table-striped table-bordered align-middle text-center mb-0">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 2;background-color: #fff">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Domain</th>
+              <th>Duration</th>
+              <th>Pay ID</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="registrationTable">
+            <% registrations.forEach(reg => { %>
+              <tr>
+                <td><%= reg.name %></td>
+                <td><%= reg.email %></td>
+                <td><%= reg.domain %></td>
+                <td><%= reg.duration %> Weeks</td>
+                <td><%= reg.payID %></td>
+                <td><span class="badge bg-warning">Pending</span></td>
+                <td>
+                  <button class="btn btn-outline-success btn-sm px-3 rounded-pill" onclick="approveReject('<%= reg._id %>', 'approve', this)">Approve</button>
+                  <button class="btn btn-outline-danger btn-sm px-3 rounded-pill" onclick="approveReject('<%= reg._id %>', 'reject', this)">Reject</button>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+function updateIntern(id) {
+
+    const data = {
+        isPassed: document.getElementById(`isPassed-${id}`).value,
+        quiz_score: document.getElementById(`quizScore-${id}`).value,
+        attemptCount: document.getElementById(`attemptCount-${id}`).value,
+        assignmentScore: document.getElementById(`assignmentScore-${id}`).value,
+        certificate_id: document.getElementById(`certificateId-${id}`).value,
+        certificate_link: document.getElementById(`certificateLink-${id}`).value,
+        starting_date: document.getElementById(`startingDate-${id}`).value,
+        completion_date: document.getElementById(`completionDate-${id}`).value
+    };
+
+    fetch(`/superAdmin/updateIntern/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+
+            // Update UI in table
+            const row = document.querySelector(`tr[data-id="${id}"]`);
+            if (row) {
+                row.querySelector(".quiz-score").innerText = data.quiz_score;
+
+                row.querySelector(".status-badge").innerHTML =
+                    data.isPassed === "true"
+                        ? '<span class="badge bg-success">Pass</span>'
+                        : '<span class="badge bg-danger">Fail</span>';
+            }
+
+            // Close modal smoothly
+            const modalEl = document.getElementById(`updateModal${id}`);
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.hide();
+        }
+    })
+    .catch(err => {
+        console.error("Update Error:", err);
+    });
+}
+</script>
+
+
+<script>
+function applyCompletedFilters() {
+  const batch = document.getElementById('batchFilterCompleted').value.toLowerCase();
+  const domain = document.getElementById('domainFilterCompleted').value.toLowerCase();
+  const duration = document.getElementById('durationFilterCompleted').value;
+  const search = document.getElementById('completedSearchInput').value.toLowerCase();
+
+  document.querySelectorAll('.completed-intern-row').forEach(row => {
+    const rowBatch = row.dataset.batch.toLowerCase();
+    const rowDomain = row.dataset.domain.toLowerCase();
+    const rowDuration = row.dataset.duration;
+    const internId = row.querySelector('.intern-id').innerText.toLowerCase();
+
+    const matchBatch = (batch === 'all' || rowBatch === batch);
+    const matchDomain = (domain === 'all' || rowDomain === domain);
+    const matchDuration = (duration === 'all' || rowDuration === duration);
+    const matchSearch = (internId.includes(search));
+
+    row.style.display = (matchBatch && matchDomain && matchDuration && matchSearch) ? '' : 'none';
+  });
+}
+
+function clearCompletedFilters() {
+  document.getElementById('batchFilterCompleted').value = 'all';
+  document.getElementById('domainFilterCompleted').value = 'all';
+  document.getElementById('durationFilterCompleted').value = 'all';
+  document.getElementById('completedSearchInput').value = '';
+  applyCompletedFilters();
+}
+</script>
+
+
+<!-- ================= COMPLETION MAIL ================= -->
+<section id="completionMail" style="display:none; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);  border: 1px solid #ff6600 !important;">
+  <h4 class="text-center mb-4">Send Internship Completion Mail</h4>
+
+  <form action="/send-completion-mail" method="POST" id="completionForm">
+    <!-- Filters + Button Row -->
+    <div class=" mb-3 bg-white rounded d-flex flex-wrap align-items-center gap-2">
+      <div class="flex-grow-0">
+        <select id="filterCompletion" class="form-select" onchange="applyFilters('completion')">
+          <option value="all">Show All</option>
+          <option value="sent">Sent</option>
+          <option value="notSent">Pending</option>
+        </select>
+      </div>
+
+      <div class="flex-grow-0">
+        <select id="batchCompletion" class="form-select" onchange="applyFilters('completion')">
+          <option value="all" selected>All Batches</option>
+          <% batches.forEach(batch => { %>
+            <option value="<%= batch %>">Batch <%= batch %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="flex-grow-1">
+        <input type="text" id="searchCompletion" class="form-control" placeholder="Search by name or email" onkeyup="applyFilters('completion')">
+      </div>
+
+      <div class="flex-grow-0">
+        <button type="button" class="btn btn-secondary" onclick="clearFilters('completion')">Clear Filters</button>
+      </div>
+
+      <div class="flex-grow-0">
+        <button class="btn btn-success" type="submit">Send Mail</button>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Batch</th>
+          <th>Status</th>
+          <th class="text-center">
+            <input type="checkbox" id="selectAllCompletion" onclick="toggleSelectAll('completion')" class="form-check-input">
+          </th>
+        </tr>
+      </thead>
+      <tbody id="completionTable">
+        <% interns.forEach(i => { %>
+          <tr data-status="<%= i.completionSent ? 'sent' : 'notSent' %>" 
+              data-batch="<%= i.batch_no %>" 
+              data-name="<%= i.name.toLowerCase() %>" 
+              data-email="<%= i.email.toLowerCase() %>"
+              class="<%= i.completionSent ? 'row-sent' : 'row-notSent' %>">
+            <td><%= i.name %></td>
+            <td><%= i.email %></td>
+            <td><%= i.batch_no %></td>
+            <td><%= i.completionSent ? 'Sent' : 'Not Sent' %></td>
+            <td class="text-center">
+              <% if (i.completionSent) { %>
+                <input type="checkbox" disabled>
+              <% } else { %>
+                <input type="checkbox" name="interns[]" value="<%= i.intern_id %>" class="completionCheckbox form-check-input">
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </form>
+</section>
+
+<!-- ================= OFFER LETTER MAIL ================= -->
+
+<section id="offerLetterMail" style="display:none; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border:1px solid #ff6600 !important">
+  <h4 class="text-center mb-4">Send Offer Letter Mail</h4>
+
+  <form action="/send-offerletter-mail" method="POST" id="offerLetterForm" class="needs-validation" novalidate>
+    <!-- Filters + Search + Send Button in one row -->
+    <div class="d-flex flex-wrap align-items-end gap-2 mb-3">
+      
+      <div class="flex-grow-0">
+        <select id="filterOfferLetter" class="form-select" onchange="applyFilters('offerLetter')">
+          <option value="sent">Sent</option>
+          <option value="notSent" selected>Pending</option>
+        </select>
+      </div>
+
+      <div class="flex-grow-0">
+        <select id="batchOfferLetter" class="form-select" onchange="applyFilters('offerLetter')">
+          <option value="all" selected>All Batches</option>
+          <% batches.forEach(batch => { %>
+            <option value="<%= batch %>"><%= batch %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="flex-grow-1">
+        <input type="text" id="searchOfferLetter" class="form-control" placeholder="Search by name or email" onkeyup="applyFilters('offerLetter')">
+      </div>
+
+      <div class="flex-grow-0">
+        <button type="button" class="btn btn-secondary" onclick="clearFilters('offerLetter')">Clear Filters</button>
+      </div>
+
+      <div class="flex-grow-0">
+        <button class="btn btn-success" type="submit">Send Mail</button>
+      </div>
+    </div>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Intern ID</th>
+          <th>Batch</th>
+          <th>Status</th>
+          <th class="text-center"><input type="checkbox" id="selectAllOfferLetter" onclick="toggleSelectAll('offerLetter')" class="form-check-input"></th>
+        </tr>
+      </thead>
+      <tbody id="offerLetterTable">
+        <% interns.forEach(i => { %>
+          <tr data-status="<%= i.offer_letter_sent ? 'sent' : 'notSent' %>" 
+              data-batch="<%= i.batch_no %>" 
+              data-name="<%= i.name.toLowerCase() %>" 
+              data-email="<%= i.email.toLowerCase() %>"
+              class="<%= i.offer_letter_sent ? 'row-sent' : 'row-notSent' %>">
+            <td><%= i.name %></td>
+            <td><%= i.email %></td>
+            <td><%= i.intern_id %></td>
+            <td><%= i.batch_no %></td>
+            <td><%= i.offer_letter_sent ? 'Sent' : 'Not Sent' %></td>
+            <td class="text-center">
+              <% if (i.offer_letter_sent) { %>
+                <input type="checkbox" disabled>
+              <% } else { %>
+                <input type="checkbox" name="interns[]" value="<%= i.intern_id %>" class="offerLetterCheckbox form-check-input" onclick="updateRowColor(this, 'offerLetter')">
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </form>
+</section>
+
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog" style="margin-top: 10vh;"> <!-- Adjust top margin -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Do you really want to log out?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="/logout" class="btn btn-danger">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- First Login Password Reset -->
+
+  <% if (showPasswordPopup) { %>
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true"
+     data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg" style="background-color: #1e1e1e; border: 1px solid #ff6600;">
+      <div class="modal-header">
+        <h5 class="modal-title text-white" id="passwordModalLabel">Change Your Password</h5>
+      </div>
+      <div class="modal-body">
+        <form action="/intern/change-password" method="POST" id="passwordForm" novalidate>
+          <div class="mb-3">
+            <label class="form-label text-white">New Password</label>
+            <input type="password" name="newPassword" class="form-control" placeholder="Enter new Password" minlength="6">
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-white">Confirm Password</label>
+            <input type="password" name="confirmPassword" class="form-control"placeholder="Confirm Password" required minlength="6">
+          </div>
+          <button type="submit" class="btn w-100 text-white" style="background-color: #ff6600; font-weight: 500;">Update Password</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const passwordModalEl = document.getElementById('passwordModal');
+  const passwordModal = new bootstrap.Modal(passwordModalEl, {
+    backdrop: 'static',
+    keyboard: false
+  });
+  passwordModal.show();
+
+</script>
+<% } %>
+
+
+<!-- Profile Picture Change Modal -->
+  <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background-color: #1e1e1e ;border: 1px solid #ff6600;">
+      <div class="modal-header">
+        <h5 class="modal-title text-white" id="updateProfileLabel">Update Profile Picture</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <!-- Image Preview -->
+        <div class="mb-3">
+          <img id="previewImage" src="<%= superAdmin.img_url %>" 
+               style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" 
+               alt="Preview">
+        </div>
+
+        <!-- Upload Form -->
+        <form action="/update-image" method="POST" enctype="multipart/form-data" id="updateImageForm">
+          <input type="file" name="image" id="imageInput" class="form-control mb-3" accept="image/*" required>
+          <button type="submit" class="btn  w-100 text-white" style="background-color: #ff6600;">Update Picture</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+    </div>
+  </div>
+  <%- include("partials/toaster") %>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/superAdmin.js"></script>
+</body>
+</html>

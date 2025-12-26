@@ -1,0 +1,8 @@
+.is-invalid {
+  border-color: #ff3300 !important;   /* orange border */
+  /* box-shadow: 0 0 0 0.2rem rgba(255, 102, 0, 0.25) !important; */
+  box-shadow: none !important;
+}
+.is-valid {
+  border-color: #00ff66 !important;   /* keep Bootstrap green */
+}

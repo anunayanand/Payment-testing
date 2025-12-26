@@ -1,0 +1,5 @@
+/* 🔄 Smooth fade-out for the loader */
+#pageLoader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
