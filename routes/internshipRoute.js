@@ -10,7 +10,7 @@ const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
 
 router.post("/create-order", async (req, res) => {
   try {
-    const data = req.body.data; // Expecting { data: { "data[Name]": ..., ... } }
+    const data = req.body.data; 
 
     // Extract fields
     const name = data["data[Name]"];
@@ -169,7 +169,7 @@ router.get("/payment/callback", async (req, res) => {
       // Find and update by order_id
       const registration = await NewRegistration.findOneAndUpdate(
         { order_id: order_id },
-        { payID: transactionId },
+        { payID: transactionId, payment_status: "SUCCESS" },
         { new: true }
       );
 
@@ -215,7 +215,6 @@ router.get("/payment/callback", async (req, res) => {
           });
         } catch (sheetError) {
           console.error("Failed to send to sheet:", sheetError.message);
-          // Continue with redirect even if sheet fails
         }
       }
 
@@ -228,6 +227,11 @@ router.get("/payment/callback", async (req, res) => {
           encodeURIComponent(invoiceUrl)
       );
     } else {
+
+       await NewRegistration.findOneAndUpdate(
+    { order_id },
+    { payment_status: "FAILED" }
+  );
       res.redirect("/internship?payment_success=false");
     }
   } catch (error) {
