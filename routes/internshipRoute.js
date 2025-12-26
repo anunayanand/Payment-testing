@@ -10,14 +10,48 @@ const CASHFREE_SECRET_KEY = process.env.CASHFREE_SECRET_KEY;
 
 router.post("/create-order", async (req, res) => {
   try {
-    let { amount, email, phone } = req.body;
+    const data = req.body.data; // Expecting { data: { "data[Name]": ..., ... } }
+
+    // Extract fields
+    const name = data["data[Name]"];
+    const email = data["data[Email]"];
+    const phone = data["data[Phone]"];
+    const university = data["data[University]"];
+    const college = data["data[College]"];
+    const course = data["data[Course]"];
+    const branch = data["data[Branch]"];
+    const year_sem = data["data[Y/S]"];
+    const domain = data["data[Domain]"];
+    const duration = data["data[Duration]"];
+    const referral_code = data["data[Referral_Code]"];
+    const terms = data["data[Terms]"];
 
     // ✅ sanitize inputs
-    email = email?.trim();
-    phone = phone?.toString().replace(/\D/g, "");
+    const sanitizedEmail = email?.trim();
+    const sanitizedPhone = phone?.toString().replace(/\D/g, "");
+
+    // ✅ validate required fields
+    if (
+      !name ||
+      !sanitizedEmail ||
+      !sanitizedPhone ||
+      !university ||
+      !college ||
+      !course ||
+      !branch ||
+      !year_sem ||
+      !domain ||
+      !duration ||
+      !terms
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "All required fields must be filled",
+      });
+    }
 
     // ✅ validate phone
-    if (!phone || phone.length !== 10) {
+    if (sanitizedPhone.length !== 10) {
       return res.status(400).json({
         success: false,
         message: "Please enter a valid 10-digit phone number",
@@ -26,8 +60,8 @@ router.post("/create-order", async (req, res) => {
 
     // Check if email already exists
     if (
-      (await User.findOne({ email: email })) ||
-      (await NewRegistration.findOne({ email: email }))
+      (await User.findOne({ email: sanitizedEmail })) ||
+      (await NewRegistration.findOne({ email: sanitizedEmail }))
     ) {
       return res.status(400).json({
         success: false,
@@ -37,21 +71,36 @@ router.post("/create-order", async (req, res) => {
 
     const orderId = `order_${Date.now()}`;
 
+    // Create dummy registration
+    const newReg = new NewRegistration({
+      name: name.trim(),
+      email: sanitizedEmail,
+      phone: sanitizedPhone,
+      university: university.trim(),
+      college: college.trim(),
+      course: course.trim(),
+      branch: branch.trim(),
+      year_sem: year_sem.trim(),
+      domain: domain.trim(),
+      duration: parseInt(duration) || 4,
+      referral_code: referral_code ? referral_code.trim() : "",
+      payID: "",
+      order_id: orderId,
+      terms: terms === "on",
+    });
+
+    await newReg.save();
+
     const request = {
       order_id: orderId,
-      order_amount: Number(amount),
+      order_amount: 100, // Fixed amount
       order_currency: "INR",
 
-      customer_details: {
-        customer_id: `cust_${Date.now()}`,
-        customer_email: email || "test@rixilab.tech",
-        customer_phone: phone,
+      order_meta: {
+        return_url: `${req.protocol}://${req.get(
+          "host"
+        )}/internship/payment/callback?order_id=${orderId}`,
       },
-
-     order_meta: {
-  return_url: `${process.env.BASE_URL}/internship/payment/callback?order_id=${orderId}`,
-},
-
     };
 
     console.log("Cashfree Request:", request);
@@ -84,121 +133,6 @@ router.post("/create-order", async (req, res) => {
   }
 });
 
-router.post("/register", async (req, res) => {
-  try {
-    // console.log(req.body);
-    const name = req.body["data[Name]"];
-    const email = req.body["data[Email]"];
-    const phone = req.body["data[Phone]"];
-    const university = req.body["data[University]"];
-    const college = req.body["data[College]"];
-    const course = req.body["data[Course]"];
-    const branch = req.body["data[Branch]"];
-    const year_sem = req.body["data[Y/S]"];
-    const domain = req.body["data[Domain]"];
-    const duration = req.body["data[Duration]"];
-    const referral_code = req.body["data[Referral_Code]"];
-    const payID = req.body["data[PayID]"];
-    const terms = req.body["data[Terms]"];
-
-    // Validate required fields
-    if (
-      !name ||
-      !email ||
-      !phone ||
-      !university ||
-      !college ||
-      !course ||
-      !branch ||
-      !year_sem ||
-      !domain ||
-      !duration ||
-      !terms
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "All required fields must be filled",
-      });
-    }
-    if (
-      (await User.findOne({ email: email })) ||
-      (await NewRegistration.findOne({ email: email }))
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already registered" });
-    }
-    // Save to NewRegistration
-    const newReg = new NewRegistration({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      university: university.trim(),
-      college: college.trim(),
-      course: course.trim(),
-      branch: branch.trim(),
-      year_sem: year_sem.trim(),
-      domain: domain.trim(),
-      duration: parseInt(duration) || 4,
-      referral_code: referral_code ? referral_code.trim() : "",
-      payID: payID ? payID.trim() : "",
-      terms: terms === "on",
-    });
-
-    await newReg.save();
-    const timestampMs = Date.now();
-    const d = new Date(timestampMs);
-
-    const pad = (n) => String(n).padStart(2, "0");
-
-    let hours = d.getHours();
-    const minutes = pad(d.getMinutes());
-    const seconds = pad(d.getSeconds());
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12;
-    hours = hours ? hours : 12; // 0 -> 12
-
-    const formattedTimestamp =
-      `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ` +
-      `${pad(hours)}:${minutes}:${seconds} ${ampm}`;
-
-    // Send to sheets
-    try {
-      const sheetData = {
-        Name: name.trim(),
-        Email: email.trim(),
-        Phone: phone.trim(),
-        University: university.trim(),
-        College: college.trim(),
-        Course: course.trim(),
-        Branch: branch.trim(),
-        "Y/S": year_sem.trim(),
-        Domain: domain.trim(),
-        Duration: parseInt(duration) || 4,
-        Referral_Code: referral_code ? referral_code.trim() : "",
-        PayID: payID ? payID.trim() : "",
-        Terms: terms === "on" ? "Yes" : "No",
-        Timestamp: formattedTimestamp,
-      };
-
-      await axios.post(SHEET_URL, {
-        data: sheetData,
-      });
-    } catch (sheetError) {
-      console.error("Failed to send to sheet:", sheetError.message);
-      // Continue with registration even if sheet fails
-    }
-
-    res.json({
-      success: true,
-      message: "Registration submitted successfully!",
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
 
 router.get("/payment/callback", async (req, res) => {
   try {
@@ -222,10 +156,60 @@ router.get("/payment/callback", async (req, res) => {
     if (payment && payment.payment_status === "SUCCESS") {
       const invoiceUrl = payment.invoice_url || "";
       const transactionId = payment.cf_payment_id || order_id; // Use cf_payment_id as transaction_id, fallback to order_id
-      await NewRegistration.findOneAndUpdate(
-        { email: payment.customer_details.customer_email },
-        { payID: transactionId }
+
+      // Find and update by order_id
+      const registration = await NewRegistration.findOneAndUpdate(
+        { order_id: order_id },
+        { payID: transactionId },
+        { new: true }
       );
+
+      if (registration) {
+        // Send to sheets
+        const timestampMs = Date.now();
+        const d = new Date(timestampMs);
+
+        const pad = (n) => String(n).padStart(2, "0");
+
+        let hours = d.getHours();
+        const minutes = pad(d.getMinutes());
+        const seconds = pad(d.getSeconds());
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12;
+        hours = hours ? hours : 12; // 0 -> 12
+
+        const formattedTimestamp =
+          `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ` +
+          `${pad(hours)}:${minutes}:${seconds} ${ampm}`;
+
+        const sheetData = {
+          Name: registration.name,
+          Email: registration.email,
+          Phone: registration.phone,
+          University: registration.university,
+          College: registration.college,
+          Course: registration.course,
+          Branch: registration.branch,
+          "Y/S": registration.year_sem,
+          Domain: registration.domain,
+          Duration: registration.duration,
+          Referral_Code: registration.referral_code,
+          PayID: registration.payID,
+          Terms: registration.terms ? "Yes" : "No",
+          Timestamp: formattedTimestamp,
+        };
+
+        try {
+          await axios.post(SHEET_URL, {
+            data: sheetData,
+          });
+        } catch (sheetError) {
+          console.error("Failed to send to sheet:", sheetError.message);
+          // Continue with redirect even if sheet fails
+        }
+      }
+
       res.redirect(
         "/internship?payment_success=true&order_id=" +
           order_id +
