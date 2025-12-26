@@ -637,7 +637,7 @@
             const response = await fetch("/internship/create-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ amount: 10, email, phone }), // Rs 100
+              body: JSON.stringify({ data: data }),
             });
             const result = await response.json();
             hideLoader();
@@ -725,33 +725,26 @@
         const transactionId = params.get("transaction_id");
         const invoiceUrl = params.get("invoice_url");
         if (paymentSuccess === "true") {
+          // Get user name before clearing
+          let userName = "User";
           const formData = localStorage.getItem("internshipFormData");
           if (formData) {
             const data = JSON.parse(formData);
-            // Add transaction_id as payID
-            data["data[PayID]"] = transactionId || orderId;
-            // Populate form
-            for (let key in data) {
-              const input = document.querySelector(`[name="${key}"]`);
-              if (input) {
-                if (input.type === "checkbox") {
-                  input.checked = data[key] === "on";
-                } else {
-                  input.value = data[key];
-                }
-              }
-            }
-            // Submit form
-            document
-              .getElementById("internship-form")
-              .dispatchEvent(new Event("submit"));
-            // Clear localStorage
-            localStorage.removeItem("internshipFormData");
+            userName = data["data[Name]"]?.trim() || "User";
           }
+          // Clear localStorage
+          localStorage.removeItem("internshipFormData");
           // Store invoice URL for later use
           if (invoiceUrl) {
             localStorage.setItem("invoiceUrl", invoiceUrl);
           }
+          // Show success message
+          const message = `Thank you ${userName}! Your internship application and payment have been successfully processed. You will receive a confirmation email shortly with further instructions.`;
+          showPopup(message, invoiceUrl);
+          // Reset form
+          document.getElementById("internship-form").reset();
+          document.getElementById("payID").disabled = true;
+          document.getElementById("payID").textContent = "Submitted";
         } else if (paymentSuccess === "false") {
           showToast(
             "Payment failed or was cancelled. Please try again.",
