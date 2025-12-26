@@ -628,6 +628,7 @@
 
           // Store form data in localStorage
           localStorage.setItem("internshipFormData", JSON.stringify(data));
+          localStorage.setItem("userName", data["data[Name]"]?.trim() || "User");
 
           // Create Cashfree order
           const email = document.getElementById("contactEmail").value;
@@ -700,16 +701,7 @@
       function showPopup(message, invoiceUrl = null) {
         const popup = document.getElementById("popup");
         const msgEl = document.getElementById("popupMsg");
-        msgEl.innerHTML = message;
-        if (invoiceUrl) {
-          // Auto-download the invoice
-          const link = document.createElement("a");
-          link.href = invoiceUrl;
-          link.download = "invoice.pdf";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
+        msgEl.innerHTML = message
         popup.style.display = "flex";
       }
       function closePopup() {
