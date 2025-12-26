@@ -19,7 +19,12 @@ const newRegistrationSchema = new mongoose.Schema({
   isCreated: { type: Boolean, default: false },
   approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   approvedAt: { type: Date },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  payment_status: {
+  type: String,
+  enum: ["PENDING", "SUCCESS", "FAILED"],
+  default: "PENDING"
+}
 });
 
 module.exports = mongoose.model("NewRegistration", newRegistrationSchema);
