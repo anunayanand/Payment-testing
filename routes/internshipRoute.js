@@ -97,11 +97,9 @@ router.post("/create-order", async (req, res) => {
       order_currency: "INR",
 
       order_meta: {
-        order_meta: {
   return_url: `${process.env.BASE_URL}/internship/payment/callback?order_id=${orderId}`,
 },
 
-    };
 
     console.log("Cashfree Request:", request);
 
