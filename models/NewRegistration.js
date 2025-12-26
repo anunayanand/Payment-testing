@@ -13,6 +13,7 @@ const newRegistrationSchema = new mongoose.Schema({
   duration: { type: Number, required: true },
   referral_code: { type: String, default: "" },
   payID: { type: String, default: "" },
+  order_id: { type: String, default: "" },
   terms: { type: Boolean, required: true },
   status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
   isCreated: { type: Boolean, default: false },
